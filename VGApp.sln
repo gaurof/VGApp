@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VGApp", "VGApp\VGApp.csproj", "{07D0127D-61CC-410D-8CD3-60B00F8D246B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VGAppDb", "VGAppDb\VGAppDb.csproj", "{384C4A84-CCCC-4D52-B450-868409C4D71F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07D0127D-61CC-410D-8CD3-60B00F8D246B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07D0127D-61CC-410D-8CD3-60B00F8D246B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07D0127D-61CC-410D-8CD3-60B00F8D246B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07D0127D-61CC-410D-8CD3-60B00F8D246B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{384C4A84-CCCC-4D52-B450-868409C4D71F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{384C4A84-CCCC-4D52-B450-868409C4D71F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{384C4A84-CCCC-4D52-B450-868409C4D71F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{384C4A84-CCCC-4D52-B450-868409C4D71F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C796F42F-3E7E-4FF2-B85F-13587BED83E7}
+	EndGlobalSection
+EndGlobal
