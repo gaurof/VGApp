@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using VGAppDb;
+using Microsoft.AspNetCore.Identity;
+using VGAppDb.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace VGApp;
 
@@ -13,14 +16,21 @@ public class Program
         builder.Services.AddControllersWithViews();
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
         var serverVersion = new MySqlServerVersion(new Version(8, 0, 40));
-        builder.Services.AddDbContext<VGAppDbContext>(
-            options => options
-                .UseMySql(connectionString, serverVersion)
-                .LogTo(Console.WriteLine, LogLevel.Information)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors()
-        );
+        builder.Services.AddDbContext<VGAppDbContext>(options => 
+            options
+            .UseMySql(connectionString, serverVersion)
+            .LogTo(Console.WriteLine, LogLevel.Information)
+            .EnableSensitiveDataLogging()
+            .EnableDetailedErrors());
+        builder.Services.AddDbContext<AuthDbContext>(options => 
+            options
+            .UseMySql(connectionString, serverVersion)
+            .LogTo(Console.WriteLine, LogLevel.Information)
+            .EnableSensitiveDataLogging()
+            .EnableDetailedErrors());
 
+        builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AuthDbContext>();
+        builder.Services.AddRazorPages();
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -41,6 +51,7 @@ public class Program
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}")
             .WithStaticAssets();
+        app.MapRazorPages();
 
         app.Run();
     }

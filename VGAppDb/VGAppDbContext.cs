@@ -11,5 +11,5 @@ public class VGAppDbContext : DbContext
     {
         Database.Migrate();
     }
-    public DbSet<User> Users { get; set; }
+    public DbSet<User> Apps { get; set; }
 }
