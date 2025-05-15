@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VGAppDb.Migrations.AuthDb
 {
     /// <inheritdoc />
-    public partial class InitialIdentity : Migration
+    public partial class InitialRegular : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

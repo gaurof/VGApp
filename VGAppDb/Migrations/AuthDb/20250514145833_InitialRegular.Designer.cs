@@ -12,8 +12,8 @@ using VGAppDb;
 namespace VGAppDb.Migrations.AuthDb
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20250514141159_InitialIdentity")]
-    partial class InitialIdentity
+    [Migration("20250514145833_InitialRegular")]
+    partial class InitialRegular
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
