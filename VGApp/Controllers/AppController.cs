@@ -14,7 +14,7 @@ public class AppController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var apps = await _context.Apps.ToListAsync();
+        var apps = await _context.Games.ToListAsync();
         return View(apps);
     }
 }

@@ -1,8 +1,169 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model List<VGAppDb.Models.Game>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="homepage-welcome body-text -hero -centered">
+    <h2 class="headline-1">Track games you've played.<br />Save those you want to play.<br />Tell your friends what's good.</h2>
+    <a class="create-account-link button-secondary -action -large" href="/account/register">Get started — it's free!</a>
+    <p class="platforms">
+        <strong>The social network for gamers.</strong>
+        Also available on <a href="/apps/" class="icons"><span class="platform -ios">iOS</span><span class="_hidetext"> and </span><span class="platform -android">Android</span></a>
+    </p>
+</div>
+
+<section id="featured" class="section -games">
+    <h2 class="section-heading">Featured Games</h2>
+    <ul class="poster-list -p150 -horizontal featured-list">
+        @foreach (var game in Model)
+        {
+            <li class="poster game-poster linked-game-poster">
+                <a href="/game/@game.Slug">
+                    <img src="@game.PosterUrl" class="image" width="150" height="225" alt="@game.Title" />
+                    <span class="frame"><span class="frame-title">@game.Title</span></span>
+                </a>
+            </li>
+        }
+    </ul>
+</section>
+
+<section id="highlights" class="section feature-list">
+    <h2 class="tagline">Gameboxd lets you…</h2>
+    <div class="highlights">
+        <a class="panel promopanel has-icon big-icon -play -hover-green" href="/welcome/#mark-played">
+            <p>Keep track of every game you've ever played (or just start from the day you join)</p>
+        </a>
+        <a class="panel promopanel has-icon big-icon -like -hover-orange" href="/welcome/#mark-played">
+            <p>Show some love for your favorite games, lists and reviews with a "like"</p>
+        </a>
+        <a class="panel promopanel has-icon big-icon -review -hover-blue" href="/welcome/#logging-games">
+            <p>Write and share reviews, and follow friends and other members to read theirs</p>
+        </a>
+        <a class="panel promopanel has-icon big-icon -rate -hover-green" href="/welcome/#mark-played">
+            <p>Rate each game on a five-star scale (with halves) to record and share your reaction</p>
+        </a>
+        <a class="panel promopanel has-icon big-icon -log -hover-orange" href="/pro/">
+            <p>Keep a diary of your gaming (and upgrade to <strong>Pro</strong> for comprehensive stats)</p>
+        </a>
+        <a class="panel promopanel has-icon big-icon -list -hover-blue" href="/welcome/#lists">
+            <p>Compile and share lists of games on any topic and keep a playlist of games to play</p>
+        </a>
+    </div>
+</section>
+
+<section id="live-feed" class="section">
+    <h2 class="section-heading">Recently Played…</h2>
+    <div class="live-feed-container has-fade">
+        <ul class="poster-list -p70 -horizontal">
+            @foreach (var activity in Model.RecentActivities)
+            {
+                <li class="live-poster">
+                    <div class="poster game-poster">
+                        <a href="/@activity.UserName/game/@activity.GameSlug">
+                            <img src="@activity.GamePosterUrl" class="image" width="70" height="105" alt="@activity.GameTitle" />
+                            <span class="frame"><span class="frame-title">@activity.GameTitle</span></span>
+                        </a>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</section>
+
+<div class="cols-2">
+    <div class="col-16">
+        <section id="popular-reviews" class="section">
+            <h2 class="section-heading -spaced"><a href="/reviews/popular/this/week/">Popular reviews this week</a></h2>
+            <div class="viewing-list -marginblockstart">
+                @foreach (var review in Model.PopularReviews)
+                {
+                    <div class="listitem">
+                        <article class="production-record -viewing viewing-poster-container">
+                            <div class="poster game-poster">
+                                <a href="/game/@review.GameSlug">
+                                    <img src="@review.GamePosterUrl" class="image" width="70" height="105" alt="@review.GameTitle" />
+                                    <span class="frame"><span class="frame-title">@review.GameTitle</span></span>
+                                </a>
+                            </div>
+                            <div class="body">
+                                <h2 class="headline-2 prettify">
+                                    <a href="/@review.UserName/game/@review.GameSlug/">@review.GameTitle</a>
+                                    <small class="metadata">@review.GameReleaseYear</small>
+                                </h2>
+                                <div class="attribution-block -large">
+                                    <a class="avatar -a24" href="/@review.UserName/">
+                                        <img src="@review.UserAvatarUrl" alt="@review.UserName" width="24" height="24" />
+                                    </a>
+                                    <div class="body">
+                                        <span class="attribution-detail">
+                                            <a class="owner" href="/@review.UserName/"><strong class="displayname">@review.UserName</strong></a>
+                                        </span>
+                                        <span class="content-reactions-strip -viewing">
+                                            <span class="rating -green rated-@(review.Rating * 2)">@Html.Raw(review.GetStarRating())</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="js-review">
+                                    <div class="body-text -prose js-review-body">
+                                        <p>@review.Content</p>
+                                    </div>
+                                    <div class="viewing-actions">
+                                        <div class="review-actions">
+                                            <p class="like-link-target">
+                                                <span class="has-icon icon-16 icon-like"></span> @review.LikesCount
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                }
+            </div>
+        </section>
+    </div>
+
+    <aside class="sidebar">
+        <section class="section list-stacked-narrow">
+            <h2 class="section-heading"><a href="/lists/popular/this/week/">Popular lists</a></h2>
+            <ul class="poster-list -p70 featured-list">
+                @foreach (var list in Model.PopularLists)
+                {
+                    <section class="list -overlapped -stacked">
+                        <a href="/@list.UserName/list/@list.Slug/" class="list-link">
+                            <div class="list-link-stacked clear">
+                                <ul class="poster-list -overlapped -p70">
+                                    @foreach (var game in list.Games.Take(5))
+                                    {
+                                        <li class="poster game-poster listitem">
+                                            <img src="@game.PosterUrl" class="image" width="70" height="105" alt="@game.Title" />
+                                            <span class="frame"><span class="frame-title">@game.Title</span></span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                            <span class="overlay"></span>
+                        </a>
+                        <h3 class="title-3 prettify">
+                            <a href="/@list.UserName/list/@list.Slug/">@list.Title</a>
+                        </h3>
+                        <div class="attribution-block">
+                            <a class="avatar -a16" href="/@list.UserName/">
+                                <img src="@list.UserAvatarUrl" alt="@list.UserName" width="16" height="16" />
+                            </a>
+                            <div class="body">
+                                <span class="attribution-detail">
+                                    <a class="owner" href="/@list.UserName/"><strong class="displayname">@list.UserName</strong></a>
+                                </span>
+                                <span class="content-reactions-strip -gamelist">
+                                    <span class="value">@list.GamesCount games</span>
+                                    <a href="/@list.UserName/list/@list.Slug/likes/" class="inlineicon icon-16 -ignoreactionpseudo icon-like">
+                                        <span class="icon" role="presentation"></span>
+                                        <span class="label">@list.LikesCount</span>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </section>
+                }
+            </ul>
+        </section>
+    </aside>
 </div>
