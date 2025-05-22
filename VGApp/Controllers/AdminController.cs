@@ -31,7 +31,7 @@ namespace VGApp.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ReleaseDate,PosterUrl")] Game game)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ReleaseDate,PosterUrl,BackgroundUrl")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace VGApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Price,ReleaseDate,PosterUrl")] Game game)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Price,ReleaseDate,PosterUrl,BackgroundUrl")] Game game)
         {
             if (id != game.Id)
             {

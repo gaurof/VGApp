@@ -1,31 +1,24 @@
 ﻿@model IEnumerable<VGAppDb.Models.Game>
 
-<div class="home-page">
-    <div class="hero-section">
-        <h1>Welcome to GameVault</h1>
-        <p>Discover and explore your favorite games</p>
+<div class="container game-collection">
+    <div class="collection-header">
+        <h2>Our Game Collection</h2>
+        <p>You can track the games you played. Keep track of the ones you want to try. Share your favorites.</p>
     </div>
 
-    <div class="featured-games">
-        <h2>Featured Titles</h2>
-        <div class="games-grid">
-            @if (Model.Count() > 0)
-            {
-                @foreach (var game in Model)
-                {
-                    <a asp-controller="Game" asp-action="" asp-route-id="@game.Id" class="game-card">
-                        <img src="@game.PosterUrl" alt="@game.Name" class="game-poster">
-                        <div class="game-info">
-                            <h3>@game.Name</h3>
-                            <div class="game-meta">
-                                <span class="year">@game.ReleaseDate.Year</span>
-                                <span class="price">$@game.Price.ToString("0.00")</span>
-                            </div>
-                        </div>
-                    </a>
-                }
-            }
-            
-        </div>
+    <div class="game-grid">
+        @foreach (var game in Model)
+        {
+            <a asp-controller="Game" asp-action="Id" asp-route-id="@game.Id" class="game-card">
+                <img src="@game.PosterUrl" alt="@game.Name" class="game-poster">
+                <div class="game-info-overlay">
+                    <div class="game-title">@game.Name</div>
+                    <div class="game-stats">
+                        <span>@game.ReleaseDate.Year</span>
+                        <span>$@game.Price.ToString("0.00")</span>
+                    </div>
+                </div>
+            </a>
+        }
     </div>
 </div>

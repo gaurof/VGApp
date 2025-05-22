@@ -1,27 +1,23 @@
 ﻿@model IEnumerable<VGAppDb.Models.Game>
 
-<div class="admin-container">
-    <!-- Left Sidebar Menu -->
-    <div class="admin-sidebar">
-        <h3>Games</h3>
-        <a asp-action="Create" class="btn btn-success mb-3">
-            <i class="fas fa-plus"></i> Create Game
+<div class="admin-games-container">
+    <div class="games-sidebar">
+        <h3 class="games-title">Games</h3>
+        <a asp-action="Create" class="create-game-button">
+            Create Game
         </a>
 
-        <div class="game-list">
+        <div class="games-list">
             @foreach (var game in Model)
             {
-                <div class="game-list-item">
-                    <div class="game-info">
-                        <img src="@game.PosterUrl" alt="@game.Name" class="game-thumbnail">
-                        <span>@game.Name</span>
-                    </div>
+                <div class="game-item">
+                    <a class="game-name-link">@game.Name</a>
                     <div class="game-actions">
-                        <a asp-action="Edit" asp-route-id="@game.Id" class="btn btn-sm btn-primary">
+                        <a asp-action="Edit" asp-route-id="@game.Id" class="edit-game-button">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <form asp-action="Delete" asp-route-id="@game.Id" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-danger"
+                        <form asp-action="Delete" asp-route-id="@game.Id" method="post" class="delete-form">
+                            <button type="submit" class="delete-game-button"
                                     onclick="return confirm('Are you sure you want to delete @game.Name?')">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -31,8 +27,16 @@
             }
         </div>
     </div>
+</div>
 
-    @section Scripts {
-        <!-- Add Font Awesome for icons -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-    }
+@section Scripts {
+    <script>
+        // Make game names clickable
+        document.querySelectorAll('.game-name-link').forEach(link => {
+            link.addEventListener('click', function() {
+                // Add your navigation logic here
+                console.log('Navigating to game:', this.textContent);
+            });
+        });
+    </script>
+}

@@ -12,8 +12,8 @@ using VGAppDb;
 namespace VGAppDb.Migrations
 {
     [DbContext(typeof(VGAppDbContext))]
-    [Migration("20250522194547_AddedGamesBackgroundImages")]
-    partial class AddedGamesBackgroundImages
+    [Migration("20250522201620_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

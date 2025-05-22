@@ -15,12 +15,33 @@ public class GameController : Controller
         _repository = repository;
     }
     [HttpGet("game/{id}")]
-    [Route("Game/{id}")]
     public async Task<IActionResult> Id(Guid id)
     {
         var game = await _repository.GetGameByIdAsync(id);
         if (game is null)
             return NotFound();
         return View(game);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddReview(Guid gameId, double rating, string text)
+    {
+        var game = await _repository.GetGameByIdAsync(gameId);
+        if (game is null)
+            return NotFound();
+
+        var review = new Review
+        {
+            GameId = gameId,
+            Rating = rating,
+            Text = text,
+            UserName = User.Identity.Name, // Or your user system
+            CreatedDate = DateTime.UtcNow
+        };
+
+        game.Reviews.Add(review);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Details", new { id = gameId });
     }
 }

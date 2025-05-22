@@ -1,29 +1,123 @@
 ﻿@model VGAppDb.Models.Game
 
-<div class="game-view">
-    <div class="game-poster-container">
-        <img src="@Model.PosterUrl" alt="@Model.Name" class="game-poster">
-        <div class="game-badge">
-            <span class="price">$@Model.Price.ToString("0.00")</span>
-            <span class="release-year">@Model.ReleaseDate.Year</span>
+<div class="game-detail-page">
+    <div class="game-background" style="background-image: url('@Model.BackgroundUrl')"></div>
+
+    <div class="container game-content">
+        <div class="game-poster-container">
+            <img src="@Model.PosterUrl" alt="@Model.Name" class="game-poster">
+        </div>
+
+        <div class="game-info">
+            <h1 class="game-title">@Model.Name</h1>
+            <span class="game-release-year">@Model.ReleaseDate.Year</span>
+
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="game-description">
+                    @Model.Description
+                </div>
+            }
+
+            <!-- Rating display -->
+            <div class="game-rating">
+                @if (Model.Reviews.Any(r => r.Rating.HasValue))
+                {
+                    var averageRating = Model.Reviews.Where(r => r.Rating.HasValue).Average(r => r.Rating.Value);
+                    <div class="average-rating">
+                        Average Rating: @Math.Round(averageRating, 1)/5
+                        <div class="stars" data-rating="@averageRating"></div>
+                        <span>(@Model.Reviews.Count reviews)</span>
+                    </div>
+                }
+                else
+                {
+                    <div>No ratings yet</div>
+                }
+            </div>
         </div>
     </div>
 
-    <div class="game-content">
-        <h1 class="game-title">@Model.Name</h1>
+    <!-- Reviews Section -->
+    <div class="reviews-container">
+        <h2>Player Reviews</h2>
 
-        @if (!string.IsNullOrEmpty(Model.Description))
-        {
-            <div class="game-description">
-                @Model.Description
-            </div>
-        }
+        <!-- Review Form -->
+        <div class="review-form">
+            <h3>Add Your Review</h3>
+            <form asp-action="AddReview" method="post">
+                <input type="hidden" name="gameId" value="@Model.Id" />
 
-        <div class="game-meta">
-            <div class="meta-section">
-                <h3>Details</h3>
-                <p>Released: @Model.ReleaseDate.ToString("MMMM d, yyyy")</p>
-            </div>
+                <div class="form-group">
+                    <label for="rating">Your Rating:</label>
+                    <select name="rating" id="rating" class="form-control" required>
+                        <option value="">Select a rating</option>
+                        @for (float i = 0.5f; i <= 5; i += 0.5f)
+                        {
+                            <option value="@i">@i stars</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="text">Your Review (optional):</label>
+                    <textarea name="text" id="text" class="form-control" rows="4"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+            </form>
+        </div>
+
+        <!-- Reviews List -->
+        <div class="reviews-list">
+            @foreach (var review in Model.Reviews.OrderByDescending(r => r.Rating))
+            {
+                <div class="review-item">
+                    <div class="review-rating">
+                        <div class="stars" data-rating="@review.Rating"></div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(review.Text))
+                    {
+                        <div class="review-text">@review.Text</div>
+                    }
+                </div>
+            }
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Initialize star ratings display
+        document.querySelectorAll('.stars').forEach(starContainer => {
+            const rating = parseFloat(starContainer.dataset.rating);
+            starContainer.innerHTML = getStars(rating);
+        });
+
+        function getStars(rating) {
+            if (isNaN(rating)) return '';
+
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+
+            // Full stars
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+
+            // Half star
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+
+            // Empty stars
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+
+            return stars;
+        }
+    </script>
+}
