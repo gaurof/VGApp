@@ -53,6 +53,9 @@ public class Program
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}")
             .WithStaticAssets();
+        app.MapControllerRoute(
+            name: "admin",
+            pattern: "admin/{controller=Games}/{action=Create}/{id?}");
         app.MapRazorPages();
         app.Run();
     }

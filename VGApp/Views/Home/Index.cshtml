@@ -13,7 +13,7 @@
             {
                 @foreach (var game in Model)
                 {
-                    <a asp-controller="Game" asp-action="ViewGame" asp-route-id="@game.Id" class="game-card">
+                    <a asp-controller="Game" asp-action="" asp-route-id="@game.Id" class="game-card">
                         <img src="@game.PosterUrl" alt="@game.Name" class="game-poster">
                         <div class="game-info">
                             <h3>@game.Name</h3>

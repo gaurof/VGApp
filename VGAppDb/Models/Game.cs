@@ -16,7 +16,10 @@ public class Game
     [Required]
     public required decimal Price { get; set; }
     public DateOnly ReleaseDate { get; set; }
-    public required string PosterUrl { get; set; }
+    [Required]
+    public required string PosterUrl { get; set; }     //600×900
+    [Required]
+    public required string BackgroundUrl { get; set; } //1920×620
 
     public List<Review>? Reviews { get; set; }
 
