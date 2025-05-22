@@ -1,0 +1,29 @@
+﻿@model VGAppDb.Models.Game
+
+<div class="game-view">
+    <div class="game-poster-container">
+        <img src="@Model.PosterUrl" alt="@Model.Name" class="game-poster">
+        <div class="game-badge">
+            <span class="price">$@Model.Price.ToString("0.00")</span>
+            <span class="release-year">@Model.ReleaseDate.Year</span>
+        </div>
+    </div>
+
+    <div class="game-content">
+        <h1 class="game-title">@Model.Name</h1>
+
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <div class="game-description">
+                @Model.Description
+            </div>
+        }
+
+        <div class="game-meta">
+            <div class="meta-section">
+                <h3>Details</h3>
+                <p>Released: @Model.ReleaseDate.ToString("MMMM d, yyyy")</p>
+            </div>
+        </div>
+    </div>
+</div>

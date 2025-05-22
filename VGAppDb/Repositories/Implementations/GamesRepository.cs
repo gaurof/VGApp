@@ -14,7 +14,17 @@ public class GamesRepository : IGamesRepository
     {
         _context = context;
     }
-
+    public async Task<List<Game>> GetGames()
+    {
+        return await _context.Games
+            .ToListAsync() ?? [];
+    }
+    public async Task<List<Game>> GetGames(int amount)
+    {
+        return await _context.Games
+            .Take(amount)
+            .ToListAsync() ?? [];
+    }
     public async Task<Game?> GetGameByIdAsync(Guid id)
     {
         return await _context.Games
@@ -32,4 +42,5 @@ public class GamesRepository : IGamesRepository
         if (game is not null)
             _context.Games.Remove(game);
     }
+
 }

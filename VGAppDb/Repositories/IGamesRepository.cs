@@ -7,12 +7,10 @@ namespace VGAppDb.Repositories;
 
 public interface IGamesRepository
 {
-    Task<IEnumerable<Game>> GetRecentGamesAsync(int count);
+    Task<List<Game>> GetGames();
+    Task<List<Game>> GetGames(int amount);
     Task<Game?> GetGameByIdAsync(Guid id);
 
     Task AddGameAsync(Game game);
-    Task UpdateGameAsync(Game game);
     Task DeleteGameAsync(Guid id);
-
-    Task<bool> SaveChangesAsync();
 }

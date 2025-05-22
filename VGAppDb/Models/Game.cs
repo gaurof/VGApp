@@ -14,7 +14,7 @@ public class Game
     public required string Name { get; set; }
     public string? Description { get; set; }
     [Required]
-    public required double Price { get; set; }
+    public required decimal Price { get; set; }
     public DateOnly ReleaseDate { get; set; }
     public required string PosterUrl { get; set; }
 

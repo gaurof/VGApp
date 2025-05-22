@@ -3,6 +3,7 @@ using VGAppDb;
 using Microsoft.AspNetCore.Identity;
 using VGAppDb.Models;
 using Microsoft.Extensions.DependencyInjection;
+using VGAppDb.Repositories;
 
 namespace VGApp;
 
@@ -27,7 +28,8 @@ public class Program
             .UseMySql(connectionString, serverVersion)
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
-            .EnableDetailedErrors());
+            .EnableDetailedErrors()); 
+        builder.Services.AddScoped<IGamesRepository, GamesRepository>();
 
         builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AuthDbContext>();
         builder.Services.AddRazorPages();

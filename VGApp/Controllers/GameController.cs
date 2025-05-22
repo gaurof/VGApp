@@ -1,20 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Core.Types;
 using VGAppDb;
+using VGAppDb.Models;
+using VGAppDb.Repositories;
 
 namespace VGApp.Controllers;
 
 public class GameController : Controller
 {
-    private readonly VGAppDbContext _context;
-    public GameController(VGAppDbContext context)
+    private readonly IGamesRepository _repository;
+    public GameController(IGamesRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
-
-    public async Task<IActionResult> Index()
+    [HttpGet("game/{id}")]
+    [Route("Game/{id}")]
+    public async Task<IActionResult> Id(Guid id)
     {
-        var apps = await _context.Games.ToListAsync();
-        return View(apps);
+        var game = await _repository.GetGameByIdAsync(id);
+        if (game is null)
+            return NotFound();
+        return View(game);
     }
 }

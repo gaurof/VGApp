@@ -1,20 +1,26 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Core.Types;
 using VGApp.Models;
 using VGAppDb;
+using VGAppDb.Models;
+using VGAppDb.Repositories;
 
 namespace VGApp.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly IGamesRepository _gamesRepository;
+
+        public HomeController(IGamesRepository gamesRepository)
         {
-            return View();
+            _gamesRepository = gamesRepository;
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var games = await _gamesRepository.GetGames(8) ?? new List<Game>();
+            return View(games);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
