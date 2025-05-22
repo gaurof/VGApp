@@ -4,10 +4,10 @@ using VGAppDb;
 
 namespace VGApp.Controllers;
 
-public class AppController : Controller
+public class GameController : Controller
 {
     private readonly VGAppDbContext _context;
-    public AppController(VGAppDbContext context)
+    public GameController(VGAppDbContext context)
     {
         _context = context;
     }
