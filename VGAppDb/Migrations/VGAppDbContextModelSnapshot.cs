@@ -63,7 +63,7 @@ namespace VGAppDb.Migrations
                     b.Property<Guid>("GameId")
                         .HasColumnType("char(36)");
 
-                    b.Property<float>("Rating")
+                    b.Property<float?>("Rating")
                         .HasColumnType("float");
 
                     b.Property<string>("Text")
@@ -73,7 +73,7 @@ namespace VGAppDb.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("Review");
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("VGAppDb.Models.Review", b =>

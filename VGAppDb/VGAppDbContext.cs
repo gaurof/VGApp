@@ -12,5 +12,6 @@ public class VGAppDbContext : DbContext
         Database.Migrate();
     }
     public DbSet<Game> Games { get; set; }
+    public DbSet<Review> Reviews { get; set; }
     // Unlimited games, but no games
 }

@@ -25,7 +25,7 @@
                 {
                     var averageRating = Model.Reviews.Where(r => r.Rating.HasValue).Average(r => r.Rating.Value);
                     <div class="average-rating">
-                        Average Rating: @Math.Round(averageRating, 1)/5
+                        Rating: @Math.Round(averageRating, 1)/5
                         <div class="stars" data-rating="@averageRating"></div>
                         <span>(@Model.Reviews.Count reviews)</span>
                     </div>
@@ -45,18 +45,19 @@
         <!-- Review Form -->
         <div class="review-form">
             <h3>Add Your Review</h3>
-            <form asp-action="AddReview" method="post">
+            <form asp-action="AddReview" method="post" id="reviewForm">
                 <input type="hidden" name="gameId" value="@Model.Id" />
+                <input type="hidden" name="rating" id="selectedRating" value="" required />
 
                 <div class="form-group">
-                    <label for="rating">Your Rating:</label>
-                    <select name="rating" id="rating" class="form-control" required>
-                        <option value="">Select a rating</option>
-                        @for (float i = 0.5f; i <= 5; i += 0.5f)
+                    <label>Your Rating:</label>
+                    <div class="star-rating">
+                        @for (float i = 1; i <= 5; i++)
                         {
-                            <option value="@i">@i stars</option>
+                            <i class="far fa-star" data-rating="@i"></i>
                         }
-                    </select>
+                        <span class="rating-text">Select a rating</span>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -88,10 +89,68 @@
 
 @section Scripts {
     <script>
-        // Initialize star ratings display
-        document.querySelectorAll('.stars').forEach(starContainer => {
-            const rating = parseFloat(starContainer.dataset.rating);
-            starContainer.innerHTML = getStars(rating);
+        // Interactive star rating
+        const stars = document.querySelectorAll('.star-rating i');
+        const ratingInput = document.getElementById('selectedRating');
+        const ratingText = document.querySelector('.rating-text');
+
+        stars.forEach(star => {
+            star.addEventListener('click', setRating);
+            star.addEventListener('mouseover', hoverRating);
+            star.addEventListener('mouseout', resetStars);
+        });
+
+        function setRating(e) {
+            const rating = e.target.dataset.rating;
+            ratingInput.value = rating;
+            updateStars(rating);
+            ratingText.textContent = `${rating} star${rating == 1 ? '' : 's'}`;
+        }
+
+        function hoverRating(e) {
+            const hoverRating = e.target.dataset.rating;
+            updateStars(hoverRating, false);
+        }
+
+        function resetStars() {
+            const currentRating = ratingInput.value || 0;
+            updateStars(currentRating);
+        }
+
+        function updateStars(rating, updateText = true) {
+            stars.forEach(star => {
+                const starRating = star.dataset.rating;
+                star.classList.remove('fas', 'far', 'fa-star-half-alt');
+
+                if (starRating <= rating) {
+                    star.classList.add('fas');
+                } else if (starRating - 0.5 <= rating) {
+                    star.classList.add('fas', 'fa-star-half-alt');
+                } else {
+                    star.classList.add('far');
+                }
+            });
+
+            if (updateText) {
+                ratingText.textContent = rating > 0
+                    ? `${rating} star${rating == 1 ? '' : 's'}`
+                    : 'Select a rating';
+            }
+        }
+
+        // Form validation
+        document.getElementById('reviewForm').addEventListener('submit', function(e) {
+            if (!ratingInput.value) {
+                e.preventDefault();
+                ratingText.textContent = 'Please select a rating';
+                ratingText.style.color = 'red';
+            }
+        });
+
+        // Display existing reviews' stars
+        document.querySelectorAll('.stars[data-rating]').forEach(container => {
+            const rating = parseFloat(container.dataset.rating);
+            container.innerHTML = getStars(rating);
         });
 
         function getStars(rating) {
@@ -101,20 +160,14 @@
             const fullStars = Math.floor(rating);
             const hasHalfStar = rating % 1 >= 0.5;
 
-            // Full stars
-            for (let i = 0; i < fullStars; i++) {
-                stars += '<i class="fas fa-star"></i>';
-            }
-
-            // Half star
-            if (hasHalfStar) {
-                stars += '<i class="fas fa-star-half-alt"></i>';
-            }
-
-            // Empty stars
-            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-            for (let i = 0; i < emptyStars; i++) {
-                stars += '<i class="far fa-star"></i>';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= fullStars) {
+                    stars += '<i class="fas fa-star"></i>';
+                } else if (i === fullStars + 1 && hasHalfStar) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    stars += '<i class="far fa-star"></i>';
+                }
             }
 
             return stars;

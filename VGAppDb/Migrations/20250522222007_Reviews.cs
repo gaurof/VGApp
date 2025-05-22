@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VGAppDb.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Reviews : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,20 +37,20 @@ namespace VGAppDb.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Review",
+                name: "Reviews",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Text = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Rating = table.Column<float>(type: "float", nullable: false),
+                    Rating = table.Column<float>(type: "float", nullable: true),
                     GameId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Review", x => x.Id);
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Review_Games_GameId",
+                        name: "FK_Reviews_Games_GameId",
                         column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "Id",
@@ -59,8 +59,8 @@ namespace VGAppDb.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Review_GameId",
-                table: "Review",
+                name: "IX_Reviews_GameId",
+                table: "Reviews",
                 column: "GameId");
         }
 
@@ -68,7 +68,7 @@ namespace VGAppDb.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Review");
+                name: "Reviews");
 
             migrationBuilder.DropTable(
                 name: "Games");

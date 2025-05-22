@@ -12,8 +12,8 @@ using VGAppDb;
 namespace VGAppDb.Migrations
 {
     [DbContext(typeof(VGAppDbContext))]
-    [Migration("20250522201620_Initial")]
-    partial class Initial
+    [Migration("20250522222007_Reviews")]
+    partial class Reviews
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,7 +66,7 @@ namespace VGAppDb.Migrations
                     b.Property<Guid>("GameId")
                         .HasColumnType("char(36)");
 
-                    b.Property<float>("Rating")
+                    b.Property<float?>("Rating")
                         .HasColumnType("float");
 
                     b.Property<string>("Text")
@@ -76,7 +76,7 @@ namespace VGAppDb.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("Review");
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("VGAppDb.Models.Review", b =>

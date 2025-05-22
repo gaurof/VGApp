@@ -30,6 +30,7 @@ public class Program
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors()); 
         builder.Services.AddScoped<IGamesRepository, GamesRepository>();
+        builder.Services.AddScoped<IReviewsRepository, ReviewsRepository>();
 
         builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AuthDbContext>();
         builder.Services.AddRazorPages();
