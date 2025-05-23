@@ -11,8 +11,8 @@
             @foreach (var game in Model)
             {
                 <div class="game-item">
-                    <a class="game-name-link">@game.Name</a>
-                    <div class="game-actions">
+                    <a class="game-name-link" >@game.Name</a>
+                    <div class="game-actions" style="background-image: url('game.BackgroundUrl');">
                         <a asp-action="Edit" asp-route-id="@game.Id" class="edit-game-button">
                             <i class="fas fa-edit"></i>
                         </a>

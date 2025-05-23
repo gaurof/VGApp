@@ -20,6 +20,7 @@ namespace VGApp.Controllers
         }
 
         // GET: Admin
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.Games.ToListAsync());
