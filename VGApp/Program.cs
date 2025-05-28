@@ -53,7 +53,7 @@ public class Program
 
         app.MapControllerRoute(
             name: "Admin",
-            pattern: "{area:Exists}/Admin/{controller=Home}/{action=Create}/{id?}");
+            pattern: "{area:Exists}/{controller=Home}/{action=Index}/{id?}");
 
         app.MapControllerRoute(
             name: "default",
