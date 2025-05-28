@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using VGAppDb.Models;
 
 namespace VGAppDb;
 
-public class VGAppDbContext : DbContext
+public class VGAppDbContext : IdentityDbContext<User>
 {
     public VGAppDbContext(DbContextOptions<VGAppDbContext> options)
         : base(options)

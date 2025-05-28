@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Identity;
 using VGAppDb.Models;
 using Microsoft.Extensions.DependencyInjection;
 using VGAppDb.Repositories;
+using VGApp.Models;
 
 namespace VGApp;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -17,23 +18,28 @@ public class Program
         builder.Services.AddControllersWithViews();
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
         var serverVersion = new MySqlServerVersion(new Version(8, 0, 40));
+
         builder.Services.AddDbContext<VGAppDbContext>(options => 
             options
             .UseMySql(connectionString, serverVersion)
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors());
-        builder.Services.AddDbContext<AuthDbContext>(options => 
-            options
-            .UseMySql(connectionString, serverVersion)
-            .LogTo(Console.WriteLine, LogLevel.Information)
-            .EnableSensitiveDataLogging()
-            .EnableDetailedErrors()); 
+        builder.Services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<VGAppDbContext>();
+
         builder.Services.AddScoped<IGamesRepository, GamesRepository>();
         builder.Services.AddScoped<IReviewsRepository, ReviewsRepository>();
 
-        builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AuthDbContext>();
         builder.Services.AddRazorPages();
+
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.ExpireTimeSpan = TimeSpan.FromDays(2);
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.Cookie = new CookieBuilder() { IsEssential = true };
+        });
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -47,13 +53,15 @@ public class Program
         app.UseHttpsRedirection();
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
+
         app.MapStaticAssets();
 
 
         app.MapControllerRoute(
-            name: "Admin",
-            pattern: "{area:Exists}/{controller=Home}/{action=Index}/{id?}");
+            name: Constants.AdminRoleName,
+            pattern: "{area:Exists}/{controller=Edit}/{action=Index}/{id?}");
 
         app.MapControllerRoute(
             name: "default",
@@ -61,7 +69,10 @@ public class Program
             .WithStaticAssets();
 
         app.MapRazorPages();
+
         app.Run();
+
+        //await IdentityInitializer.Initialize(); TO;DO
     }
 }
 

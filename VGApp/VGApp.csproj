@@ -27,4 +27,8 @@
     <ProjectReference Include="..\VGAppDb\VGAppDb.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\User\Views\" />
+  </ItemGroup>
+
 </Project>
