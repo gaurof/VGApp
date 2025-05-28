@@ -48,15 +48,18 @@ public class Program
         app.UseRouting();
 
         app.UseAuthorization();
-
         app.MapStaticAssets();
+
+
+        app.MapControllerRoute(
+            name: "Admin",
+            pattern: "{area:Exists}/Admin/{controller=Home}/{action=Create}/{id?}");
+
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}")
             .WithStaticAssets();
-        app.MapControllerRoute(
-            name: "admin",
-            pattern: "admin/{controller=Games}/{action=Create}/{id?}");
+
         app.MapRazorPages();
         app.Run();
     }

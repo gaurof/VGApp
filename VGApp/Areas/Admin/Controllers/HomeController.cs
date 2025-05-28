@@ -8,13 +8,14 @@ using Microsoft.EntityFrameworkCore;
 using VGAppDb;
 using VGAppDb.Models;
 
-namespace VGApp.Controllers
+namespace VGApp.Areas.Admin.Controllers
 {
-    public class AdminController : Controller
+    [Area("Admin")]
+    public class HomeController : Controller
     {
         private readonly VGAppDbContext _context;
 
-        public AdminController(VGAppDbContext context)
+        public HomeController(VGAppDbContext context)
         {
             _context = context;
         }
