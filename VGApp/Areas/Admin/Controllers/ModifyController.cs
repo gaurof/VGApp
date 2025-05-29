@@ -14,23 +14,23 @@ namespace VGApp.Areas.Admin.Controllers
 {
     [Area(Constants.AdminRoleName)]
     [Authorize(Roles = Constants.AdminRoleName)]
-    public class EditController : Controller
+    public class ModifyController : Controller
     {
         private readonly VGAppDbContext _context;
 
-        public EditController(VGAppDbContext context)
+        public ModifyController(VGAppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Admin
+        // GET: Admin/Edit/Index
         
         public async Task<IActionResult> Index()
         {
             return View(await _context.Games.ToListAsync());
         }
 
-        // GET: Admin/Create
+        // GET: Admin/Edit/Create
         public IActionResult CreateGame()
         {
             return View();
@@ -48,7 +48,7 @@ namespace VGApp.Areas.Admin.Controllers
             return View(game);
         }
 
-        // GET: Admin/Edit/5
+        // GET: Admin/Edit/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id is null)
@@ -60,7 +60,7 @@ namespace VGApp.Areas.Admin.Controllers
             return View(game);
         }
 
-        // POST: Admin/Edit/5
+        // POST: Admin/Edit/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]

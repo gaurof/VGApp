@@ -25,8 +25,13 @@ public class Program
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors());
-        builder.Services.AddIdentity<User, IdentityRole>()
-            .AddEntityFrameworkStores<VGAppDbContext>();
+        builder.Services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = false;
+                options.SignIn.RequireConfirmedAccount = false;
+            })
+            .AddEntityFrameworkStores<VGAppDbContext>()
+            .AddDefaultTokenProviders();
 
         builder.Services.AddScoped<IGamesRepository, GamesRepository>();
         builder.Services.AddScoped<IReviewsRepository, ReviewsRepository>();
@@ -36,11 +41,11 @@ public class Program
         builder.Services.ConfigureApplicationCookie(options =>
         {
             options.ExpireTimeSpan = TimeSpan.FromDays(2);
-            options.LoginPath = "/Account/Login";
-            options.LogoutPath = "/Account/Logout";
+            options.LoginPath = "/User/Account/Login";
+            options.LogoutPath = "/User/Account/Logout";
             options.Cookie = new CookieBuilder() { IsEssential = true };
         });
-        var app = builder.Build();
+        await using var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -49,7 +54,21 @@ public class Program
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            try
+            {
+                var userManager = services.GetRequiredService<UserManager<User>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                await IdentityInitializer.Initialize(userManager, roleManager);
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred while seeding identity data.");
+            }
+        }
         app.UseHttpsRedirection();
         app.UseRouting();
 
@@ -64,6 +83,10 @@ public class Program
             pattern: "{area:Exists}/{controller=Edit}/{action=Index}/{id?}");
 
         app.MapControllerRoute(
+            name: Constants.UserRoleName,
+            pattern: "{area:Exists}/{controller=Account}/{action=Login}/{id?}");
+
+        app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}")
             .WithStaticAssets();
@@ -71,8 +94,6 @@ public class Program
         app.MapRazorPages();
 
         app.Run();
-
-        //await IdentityInitializer.Initialize(); TO;DO
     }
 }
 
