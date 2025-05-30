@@ -80,11 +80,11 @@ public class Program
 
         app.MapControllerRoute(
             name: Constants.AdminRoleName,
-            pattern: "{area:Exists}/{controller=Edit}/{action=Index}/{id?}");
+            pattern: "{area=Admin}/{controller=Edit}/{action=Index}/{id?}");
 
         app.MapControllerRoute(
             name: Constants.UserRoleName,
-            pattern: "{area:Exists}/{controller=Account}/{action=Login}/{id?}");
+            pattern: "{area=User}/{controller=Account}/{action=Login}/{id?}");
 
         app.MapControllerRoute(
             name: "default",

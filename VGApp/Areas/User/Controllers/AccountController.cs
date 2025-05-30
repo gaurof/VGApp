@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using VGApp.Areas.User.Views.Models;
 using VGApp.Controllers;
 using VGApp.Models;
@@ -13,7 +15,6 @@ namespace VGApp.Areas.User.Controllers
     {
         private readonly SignInManager<VGAppDb.Models.User> _signInManager;
         private readonly UserManager<VGAppDb.Models.User> _userManager;
-        private const string _defaultRedirectUrl = "/Home/Index";
         public AccountController(
             SignInManager<VGAppDb.Models.User> signInManager,
             UserManager<VGAppDb.Models.User> userManager)
@@ -22,23 +23,23 @@ namespace VGApp.Areas.User.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet]
         public IActionResult Login(string? returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            TempData["ReturnUrl"] = returnUrl ?? "";
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            returnUrl = TempData["ReturnUrl"]!.ToString();
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return RedirectToOrHome(returnUrl);
+                    return ReturnBack(returnUrl);
                 }
                 else
                 {
@@ -53,9 +54,10 @@ namespace VGApp.Areas.User.Controllers
         public async Task<IActionResult> Logout(string? returnUrl = null)
         {
             await _signInManager.SignOutAsync();
-            return RedirectToOrHome(returnUrl);
+            return Redirect(returnUrl ?? "/Home/Index");
         }
 
+        [HttpPost]
         [AllowAnonymous]
         public IActionResult Register(string returnUrl)
         {
@@ -77,18 +79,21 @@ namespace VGApp.Areas.User.Controllers
                 {
                     await _userManager.AddToRoleAsync(user, Constants.UserRoleName);
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToOrHome(returnUrl);
+                    return Redirect(returnUrl ?? "/Home/Index");
                 }
             }
             return View(model);
         }
-
-
-        public IActionResult RedirectToOrHome(string? returnUrl)
+        IActionResult ReturnBack(string? returnUrl)
         {
-            if (returnUrl is null)
-                return RedirectToAction(_defaultRedirectUrl);
-            return RedirectToAction(returnUrl);
+            if (!returnUrl.IsNullOrEmpty())
+            {
+                List<string> splitUrl = returnUrl.Split('/').ToList();
+                splitUrl.Insert(0, "");
+                var length = splitUrl.Count;
+                return RedirectToAction(splitUrl[length - 1], splitUrl[length - 2], new { area = splitUrl[length - 3] });
+            }
+            return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
 }

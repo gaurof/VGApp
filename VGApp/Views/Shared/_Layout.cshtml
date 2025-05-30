@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
+    @{
+        string url = @Url.PageLink()!.Substring("http://localhost:5193/".Length);
+    }
     <header class="game-header">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm">
             <div class="container">
@@ -32,13 +35,20 @@
                         }
                     </ul>
 
+                    @if (User.IsInRole(Constants.AdminRoleName))
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            @url
+                        </ul>
+                    }
+
                     <ul class="navbar-nav">
                         @if (User.Identity!.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <form asp-area="User" asp-controller="Account" asp-action="Logout" method="post">
+                                <form asp-area="User" asp-controller="Account" asp-action="Logout" asp-route-returnUrl=@url method="post">
                                     <button type="submit" class="nav-link btn btn-link">
-                                        <i class="fas fa-user me-1"></i> Logout
+                                        <i class="fas fa-right-from-bracket me-1"></i> Logout
                                     </button>
                                 </form>
                             </li>
@@ -46,8 +56,13 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="User" asp-controller="Account" asp-action="Login">
+                                <a class="nav-link" asp-area="User" asp-controller="Account" asp-action="Login" asp-route-returnUrl=@url>
                                     <i class="fas fa-user me-1"></i> Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="User" asp-controller="Account" asp-action="Registration" asp-route-returnUrl=@url>
+                                    <i class="fas fa-user-plus me-1"></i> Registration
                                 </a>
                             </li>
                         }
