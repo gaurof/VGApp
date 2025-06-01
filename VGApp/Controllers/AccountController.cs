@@ -8,7 +8,6 @@ using VGAppDb.Models;
 
 namespace VGApp.Controllers
 {
-    [Area(Constants.UserRoleName)]
     public class AccountController : Controller
     {
         private readonly SignInManager<User> _signInManager;
@@ -37,7 +36,7 @@ namespace VGApp.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return ReturnBack(returnUrl);
+                    return Redirect(returnUrl ?? "/Home/Index");
                 }
                 else
                 {
@@ -51,6 +50,9 @@ namespace VGApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout(string? returnUrl = null)
         {
+            if (returnUrl is not null &&
+                returnUrl.TrimStart('/').StartsWith("Admin"))
+                returnUrl = null;
             await _signInManager.SignOutAsync();
             return Redirect(returnUrl ?? "/Home/Index");
         }
@@ -81,17 +83,6 @@ namespace VGApp.Controllers
                 }
             }
             return View(model);
-        }
-        IActionResult ReturnBack(string? returnUrl)
-        {
-            if (!returnUrl.IsNullOrEmpty())
-            {
-                List<string> splitUrl = returnUrl.Split('/').ToList();
-                splitUrl.Insert(0, "");
-                var length = splitUrl.Count;
-                return RedirectToAction(splitUrl[length - 1], splitUrl[length - 2], new { area = splitUrl[length - 3] });
-            }
-            return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
 }

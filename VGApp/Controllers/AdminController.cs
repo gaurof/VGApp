@@ -12,7 +12,6 @@ using VGAppDb.Models;
 
 namespace VGApp.Controllers
 {
-    [Area(Constants.AdminRoleName)]
     [Authorize(Roles = Constants.AdminRoleName)]
     public class AdminController : Controller
     {

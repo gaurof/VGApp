@@ -77,15 +77,6 @@ public class Program
 
         app.MapStaticAssets();
 
-
-        app.MapControllerRoute(
-            name: Constants.AdminRoleName,
-            pattern: "{area=Admin}/{controller=Edit}/{action=Index}/{id?}");
-
-        app.MapControllerRoute(
-            name: Constants.UserRoleName,
-            pattern: "{area=User}/{controller=Account}/{action=Login}/{id?}");
-
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}")

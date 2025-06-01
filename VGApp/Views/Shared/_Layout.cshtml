@@ -28,7 +28,7 @@
                         @if (User.IsInRole(Constants.AdminRoleName))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="Admin" asp-controller="Modify" asp-action="Index">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Index">
                                     <i class="fas fa-cog me-1"></i> Admin
                                 </a>
                             </li>
@@ -46,7 +46,7 @@
                         @if (User.Identity!.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <form asp-area="User" asp-controller="Account" asp-action="Logout" asp-route-returnUrl=@url method="post">
+                                <form asp-controller="Account" asp-action="Logout" asp-route-returnUrl=@url method="post">
                                     <button type="submit" class="nav-link btn btn-link">
                                         <i class="fas fa-right-from-bracket me-1"></i> Logout
                                     </button>
@@ -56,12 +56,12 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="User" asp-controller="Account" asp-action="Login" asp-route-returnUrl=@url>
+                                <a class="nav-link" asp-controller="Account" asp-action="Login" asp-route-returnUrl=@url>
                                     <i class="fas fa-user me-1"></i> Login
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="User" asp-controller="Account" asp-action="Registration" asp-route-returnUrl=@url>
+                                <a class="nav-link" asp-controller="Account" asp-action="Registration" asp-route-returnUrl=@url>
                                     <i class="fas fa-user-plus me-1"></i> Registration
                                 </a>
                             </li>
