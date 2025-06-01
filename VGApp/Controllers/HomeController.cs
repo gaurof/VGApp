@@ -19,7 +19,7 @@ namespace VGApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var games = await _gamesRepository.GetGames(8) ?? new List<Game>();
+            var games = await _gamesRepository.GetGames(20) ?? [];
             return View(games);
         }
 

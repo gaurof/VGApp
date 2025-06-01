@@ -50,7 +50,7 @@ namespace VGApp.Controllers
             if (id is null || !id.HasValue)
                 return NotFound();
 
-            if (await gamesRepository.ExistsAsync(id.Value))
+            if (await gamesRepository.ExistsByIdAsync(id.Value))
                 return NotFound();
 
             var game = await gamesRepository.GetGameByIdAsync(id.Value);
@@ -60,9 +60,9 @@ namespace VGApp.Controllers
         // POST: Admin/Edit/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,ReleaseYear,PosterUrl,BackgroundUrl")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,Price,ReleaseYear,PosterUrl,BackgroundUrl")] Game game)
         {
-            if (!await gamesRepository.ExistsAsync(game) || id != game.Id)
+            if (!await gamesRepository.ExistsByPropertiesAsync(game) || id != game.Id)
                 return NotFound();
             if (ModelState.IsValid)
             {
@@ -84,7 +84,7 @@ namespace VGApp.Controllers
         {
             if (id is null || !id.HasValue)
                 return NotFound();
-            if (!await gamesRepository.ExistsAsync(id.Value))
+            if (!await gamesRepository.ExistsByIdAsync(id.Value))
                 return NotFound();
             var game = await gamesRepository.GetGameByIdAsync(id.Value);
 

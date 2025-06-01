@@ -36,4 +36,19 @@ public class Game
 
     public List<Review>? Reviews { get; set; }
 
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is not Game || obj is null)
+            return false;
+        return Equals((Game)obj);
+    }
+    public bool Equals(Game game)
+    {
+        if (Name == game.Name) 
+            return true;
+        return false;
+    }
+
+    public override int GetHashCode() => Id;
 }
