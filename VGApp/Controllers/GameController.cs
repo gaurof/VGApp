@@ -21,7 +21,7 @@ public class GameController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddReview(Guid gameId, float rating, string? text)
+    public async Task<IActionResult> AddReview(int gameId, float rating, string? text)
     {
         try
         {
@@ -39,7 +39,6 @@ public class GameController : Controller
 
             var review = new Review
             {
-                Id = Guid.NewGuid(),
                 Rating = rating,
                 Text = text,
                 Game = game
@@ -49,14 +48,14 @@ public class GameController : Controller
 
             return RedirectToAction(gameId.ToString());
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             TempData["ErrorMessage"] = "An error occurred while adding your review";
             return RedirectToAction(gameId.ToString());
         }
     }
     [HttpGet("game/{id}")]
-    public async Task<IActionResult> Id(Guid id)
+    public async Task<IActionResult> Id(int id)
     {
         var game = await _gamesRepository.GetGameByIdAsync(id);
         if (game is null)

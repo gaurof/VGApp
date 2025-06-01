@@ -9,9 +9,9 @@ namespace VGAppDb.Repositories;
 
 public interface IReviewsRepository
 {
-    Task<List<Game>> GetReviewsByGameId(Guid id);
-    Task<Game?> GetReviewByIdAsync(Guid id);
+    Task<List<Game>> GetReviewsByGameId(int id);
+    Task<Game?> GetReviewByIdAsync(int id);
 
     Task AddReviewAsync(Review review);
-    Task DeleteReviewAsync(Guid id);
+    Task DeleteReviewAsync(int id);
 }

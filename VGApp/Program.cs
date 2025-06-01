@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using VGAppDb.Models;
 using Microsoft.Extensions.DependencyInjection;
 using VGAppDb.Repositories;
-using VGApp.Models;
 
 namespace VGApp;
 
@@ -61,7 +60,9 @@ public class Program
             {
                 var userManager = services.GetRequiredService<UserManager<User>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                await IdentityInitializer.Initialize(userManager, roleManager);
+                var gamesRepository = services.GetRequiredService<IGamesRepository>();
+                await Initializer.InitializeIdentity(userManager, roleManager);
+                await Initializer.CreatePlaceholderGames(gamesRepository);
             }
             catch (Exception ex)
             {

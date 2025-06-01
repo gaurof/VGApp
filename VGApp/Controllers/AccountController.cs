@@ -8,17 +8,11 @@ using VGAppDb.Models;
 
 namespace VGApp.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController(SignInManager<User> signInManager,
+                                   UserManager<User> userManager) : Controller
     {
-        private readonly SignInManager<User> _signInManager;
-        private readonly UserManager<User> _userManager;
-        public AccountController(
-            SignInManager<User> signInManager,
-            UserManager<User> userManager)
-        {
-            _signInManager = signInManager;
-            _userManager = userManager;
-        }
+        private readonly SignInManager<User> _signInManager = signInManager;
+        private readonly UserManager<User> _userManager = userManager;
 
         public IActionResult Login(string? returnUrl = null)
         {

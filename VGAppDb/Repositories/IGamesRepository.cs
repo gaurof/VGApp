@@ -9,8 +9,11 @@ public interface IGamesRepository
 {
     Task<List<Game>> GetGames();
     Task<List<Game>> GetGames(int amount);
-    Task<Game?> GetGameByIdAsync(Guid id);
+    Task<Game?> GetGameByIdAsync(int id);
+    Task<bool> ExistsAsync(int id);
+    Task<bool> ExistsAsync(Game game);
 
     Task AddGameAsync(Game game);
-    Task DeleteGameAsync(Guid id);
+    Task EditGameAsync(int id, Game game);
+    Task DeleteGameAsync(int id);
 }

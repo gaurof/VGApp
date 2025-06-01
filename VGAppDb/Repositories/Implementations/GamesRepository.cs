@@ -25,22 +25,33 @@ public class GamesRepository : IGamesRepository
             .Take(amount)
             .ToListAsync() ?? [];
     }
-    public async Task<Game?> GetGameByIdAsync(Guid id)
+    public async Task<Game?> GetGameByIdAsync(int id)
     {
         return await _context.Games
             .Include(g => g.Reviews)
             .FirstOrDefaultAsync(g => g.Id == id);
     }
 
+    public async Task<bool> ExistsAsync(int id) => await GetGameByIdAsync(id) is null;
+    public async Task<bool> ExistsAsync(Game game) => await ExistsAsync(game.Id);
+
     public async Task AddGameAsync(Game game)
     {
         await _context.Games.AddAsync(game);
+        _context.SaveChanges();
     }
-    public async Task DeleteGameAsync(Guid id)
+    public async Task EditGameAsync(int id, Game gameNew)
+    {
+        var game = await GetGameByIdAsync(id);
+        game = gameNew;
+        _context.SaveChanges();
+    }
+    public async Task DeleteGameAsync(int id)
     {
         var game = await _context.Games.FindAsync(id);
         if (game is not null)
             _context.Games.Remove(game);
+        _context.SaveChanges();
     }
 
 }

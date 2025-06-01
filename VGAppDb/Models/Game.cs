@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,17 +10,29 @@ namespace VGAppDb.Models;
 
 public class Game
 {
-    public Guid Id { get; set; }
+    
+    public int Id { get; set; }
+
     [Required]
     public required string Name { get; set; }
+
     public string? Description { get; set; }
+
     [Required]
-    public required decimal Price { get; set; }
-    public DateOnly ReleaseDate { get; set; }
+    public required decimal PriceUSD { get; set; }
+
+    public int ReleaseYear { get; set; }
+
     [Required]
     public required string PosterUrl { get; set; }     //600×900
+
     [Required]
     public required string BackgroundUrl { get; set; } //1920×620
+
+    [Required]
+    public required string LogoUrl { get; set; } 
+
+
 
     public List<Review>? Reviews { get; set; }
 

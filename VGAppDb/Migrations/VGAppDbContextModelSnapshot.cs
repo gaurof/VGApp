@@ -156,15 +156,21 @@ namespace VGAppDb.Migrations
 
             modelBuilder.Entity("VGAppDb.Models.Game", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BackgroundUrl")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LogoUrl")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
@@ -175,11 +181,11 @@ namespace VGAppDb.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("PriceUSD")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<DateOnly>("ReleaseDate")
-                        .HasColumnType("date");
+                    b.Property<int>("ReleaseYear")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -188,12 +194,14 @@ namespace VGAppDb.Migrations
 
             modelBuilder.Entity("VGAppDb.Models.Review", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("GameId")
-                        .HasColumnType("char(36)");
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
 
                     b.Property<float?>("Rating")
                         .HasColumnType("float");

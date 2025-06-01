@@ -1,4 +1,4 @@
-﻿namespace VGApp.Models;
+﻿namespace VGApp;
 
 public static class Constants
 {

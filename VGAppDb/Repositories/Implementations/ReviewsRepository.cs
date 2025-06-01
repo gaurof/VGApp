@@ -16,7 +16,7 @@ namespace VGAppDb.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<List<Game>> GetReviewsByGameId(Guid id)
+        public async Task<List<Game>> GetReviewsByGameId(int id)
         {
             return await _context.Games
                 .Include(g => g.Reviews)
@@ -24,7 +24,7 @@ namespace VGAppDb.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Game?> GetReviewByIdAsync(Guid id)
+        public async Task<Game?> GetReviewByIdAsync(int id)
         {
             return await _context.Games
                 .Include(g => g.Reviews)
@@ -40,7 +40,7 @@ namespace VGAppDb.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteReviewAsync(Guid id)
+        public async Task DeleteReviewAsync(int id)
         {
             var review = await _context.Reviews.FindAsync(id);
             if (review != null)

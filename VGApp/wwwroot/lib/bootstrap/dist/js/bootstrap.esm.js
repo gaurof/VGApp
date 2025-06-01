@@ -757,7 +757,7 @@ const SelectorEngine = {
     }
     return [];
   },
-  // TODO: this is now unused; remove later along with prev()
+  // TODO: this is now unused; remove later aint with prev()
   next(element, selector) {
     let next = element.nextElementSibling;
     while (next) {
@@ -2951,7 +2951,7 @@ const DefaultAllowlist = {
 };
 // js-docs-end allow-list
 
-const uriAttributes = new Set(['background', 'cite', 'href', 'itemtype', 'longdesc', 'poster', 'src', 'xlink:href']);
+const uriAttributes = new Set(['background', 'cite', 'href', 'itemtype', 'intdesc', 'poster', 'src', 'xlink:href']);
 
 /**
  * A pattern that recognizes URLs that are safe wrt. XSS in URL navigation

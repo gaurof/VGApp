@@ -7,26 +7,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VGAppDb;
-using VGApp.Models;
 using VGAppDb.Models;
+using VGAppDb.Repositories;
 
 namespace VGApp.Controllers
 {
     [Authorize(Roles = Constants.AdminRoleName)]
     public class AdminController : Controller
     {
-        private readonly VGAppDbContext _context;
-
-        public AdminController(VGAppDbContext context)
+        private readonly IGamesRepository gamesRepository;
+        public AdminController(IGamesRepository gamesRepository)
         {
-            _context = context;
+            this.gamesRepository = gamesRepository;
         }
 
         // GET: Admin/Edit/Index
         
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Games.ToListAsync());
+            return View(await gamesRepository.GetGames());
         }
 
         // GET: Admin/Edit/Create
@@ -35,59 +34,45 @@ namespace VGApp.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ReleaseDate,PosterUrl,BackgroundUrl")] Game game)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ReleaseYear,PosterUrl,BackgroundUrl")] Game game)
         {
             if (ModelState.IsValid)
             {
-                game.Id = Guid.NewGuid();
-                _context.Add(game);
-                await _context.SaveChangesAsync();
+                await gamesRepository.AddGameAsync(game);
                 return RedirectToAction(nameof(Index));
             }
             return View(game);
         }
 
         // GET: Admin/Edit/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id is null)
+            if (id is null || !id.HasValue)
                 return NotFound();
 
-            var game = await _context.Games.FindAsync(id);
-            if (game is null)
+            if (await gamesRepository.ExistsAsync(id.Value))
                 return NotFound();
+
+            var game = await gamesRepository.GetGameByIdAsync(id.Value);
             return View(game);
         }
 
         // POST: Admin/Edit/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Price,ReleaseDate,PosterUrl,BackgroundUrl")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,ReleaseYear,PosterUrl,BackgroundUrl")] Game game)
         {
-            if (id != game.Id)
-            {
+            if (!await gamesRepository.ExistsAsync(game) || id != game.Id)
                 return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(game);
-                    await _context.SaveChangesAsync();
+                    await gamesRepository.EditGameAsync(id, game);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GameExists(game.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                catch (DbUpdateConcurrencyException ex) 
+                { 
+                    Console.WriteLine(ex); 
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -95,19 +80,13 @@ namespace VGApp.Controllers
         }
 
         // GET: Admin/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
+            if (id is null || !id.HasValue)
                 return NotFound();
-            }
-
-            var game = await _context.Games
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (game == null)
-            {
+            if (!await gamesRepository.ExistsAsync(id.Value))
                 return NotFound();
-            }
+            var game = await gamesRepository.GetGameByIdAsync(id.Value);
 
             return View(game);
         }
@@ -115,21 +94,10 @@ namespace VGApp.Controllers
         // POST: Admin/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var game = await _context.Games.FindAsync(id);
-            if (game != null)
-            {
-                _context.Games.Remove(game);
-            }
-
-            await _context.SaveChangesAsync();
+            await gamesRepository.DeleteGameAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool GameExists(Guid id)
-        {
-            return _context.Games.Any(e => e.Id == id);
         }
     }
 }
