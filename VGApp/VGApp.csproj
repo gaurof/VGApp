@@ -27,4 +27,10 @@
     <ProjectReference Include="..\VGAppDb\VGAppDb.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Controllers\" />
+    <Folder Include="Areas\User\Controllers\" />
+    <Folder Include="Areas\User\Views\Models\" />
+  </ItemGroup>
+
 </Project>

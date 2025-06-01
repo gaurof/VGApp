@@ -10,15 +10,15 @@ using VGAppDb;
 using VGApp.Models;
 using VGAppDb.Models;
 
-namespace VGApp.Areas.Admin.Controllers
+namespace VGApp.Controllers
 {
     [Area(Constants.AdminRoleName)]
     [Authorize(Roles = Constants.AdminRoleName)]
-    public class ModifyController : Controller
+    public class AdminController : Controller
     {
         private readonly VGAppDbContext _context;
 
-        public ModifyController(VGAppDbContext context)
+        public AdminController(VGAppDbContext context)
         {
             _context = context;
         }

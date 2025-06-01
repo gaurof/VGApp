@@ -3,21 +3,19 @@ using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using VGApp.Areas.User.Views.Models;
-using VGApp.Controllers;
 using VGApp.Models;
 using VGAppDb.Models;
 
-namespace VGApp.Areas.User.Controllers
+namespace VGApp.Controllers
 {
     [Area(Constants.UserRoleName)]
     public class AccountController : Controller
     {
-        private readonly SignInManager<VGAppDb.Models.User> _signInManager;
-        private readonly UserManager<VGAppDb.Models.User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         public AccountController(
-            SignInManager<VGAppDb.Models.User> signInManager,
-            UserManager<VGAppDb.Models.User> userManager)
+            SignInManager<User> signInManager,
+            UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -73,7 +71,7 @@ namespace VGApp.Areas.User.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new VGAppDb.Models.User { UserName = model.Username };
+                var user = new User { UserName = model.Username };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

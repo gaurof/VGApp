@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace VGApp.Areas.User.Views.Models
+namespace VGApp.Models
 {
     public class RegisterViewModel
     {
