@@ -9,7 +9,7 @@
         </div>
 
         <div class="game-info">
-            <h1 class="game-title">@Model.Name</h1>
+            <img src="@Model.LogoUrl" class="game-logo">
             <span class="game-release-year">@Model.ReleaseYear</span>
 
             @if (!string.IsNullOrEmpty(Model.Description))
@@ -21,9 +21,10 @@
 
             <!-- Rating display -->
             <div class="game-rating">
-                @if (Model.Reviews.Any(r => r.Rating.HasValue))
+                @if (Model.Reviews is not null && 
+                     Model.Reviews.Any(r => r.Rating.HasValue))
                 {
-                    var averageRating = Model.Reviews.Where(r => r.Rating.HasValue).Average(r => r.Rating.Value);
+                    var averageRating = Model.Reviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value);
                     <div class="average-rating">
                         Rating: @Math.Round(averageRating, 1)/5
                         <div class="stars" data-rating="@averageRating"></div>
@@ -46,7 +47,7 @@
         <div class="review-form">
             <h3>Leave a review</h3>
             <form asp-action="AddReview" method="post" id="reviewForm">
-                <input type="hidden" name="gameId" value="@Model.Id" />
+                <input type="hidden" name="gameName" value="@Model.Name" />
                 <input type="hidden" name="rating" id="selectedRating" value="" required />
 
                 <div class="form-group">
@@ -63,23 +64,26 @@
                     <textarea name="text" id="text" class="form-control" rows="4"></textarea>
                 </div>
 
-                <button style="background-image: url('@Model.BackgroundUrl')" type="submit" class="btn btn-primary">Submit Review</button>
+                <button style="background-image: url('@Model.BackgroundUrl');" type="submit" class="btn btn-primary">Submit Review</button>
             </form>
         </div>
 
         <!-- Reviews List -->
         <div class="reviews-list">
-            @foreach (var review in Model.Reviews.OrderByDescending(r => r.Rating))
+            @if (Model.Reviews is not null)
             {
-                <div class="review-item">
-                    <div class="review-rating">
-                        <div class="stars" data-rating="@review.Rating"></div>
+                @foreach (var review in Model.Reviews.OrderByDescending(r => r.Rating))
+                {
+                    <div class="review-item">
+                        <div class="review-rating">
+                            <div class="stars" data-rating="@review.Rating"></div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(review.Text))
+                        {
+                            <div class="review-text">@review.Text</div>
+                        }
                     </div>
-                    @if (!string.IsNullOrEmpty(review.Text))
-                    {
-                        <div class="review-text">@review.Text</div>
-                    }
-                </div>
+                }
             }
         </div>
     </div>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using VGAppDb.Models;
 
 namespace VGAppDb.Repositories
@@ -16,11 +17,11 @@ namespace VGAppDb.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<List<Game>> GetReviewsByGameId(int id)
+        public async Task<List<Game>> GetReviewsByGameName(string name)
         {
             return await _context.Games
                 .Include(g => g.Reviews)
-                .Where(g => g.Id == id)
+                .Where(g => g.Name == name)
                 .ToListAsync();
         }
 
@@ -28,13 +29,12 @@ namespace VGAppDb.Repositories
         {
             return await _context.Games
                 .Include(g => g.Reviews)
-                .FirstOrDefaultAsync(g => g.Reviews.Any(r => r.Id == id));
+                .FirstOrDefaultAsync(g => g.Reviews!.Any(r => r.Id == id));
         }
 
         public async Task AddReviewAsync(Review review)
         {
-            if (review == null)
-                throw new ArgumentNullException(nameof(review));
+            ArgumentNullException.ThrowIfNull(review);
 
             await _context.Reviews.AddAsync(review);
             await _context.SaveChangesAsync();
@@ -49,5 +49,8 @@ namespace VGAppDb.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<bool> ExistsAsync(Review review) => 
+            await GetReviewByIdAsync(review.Id) is not null;
     }
 }

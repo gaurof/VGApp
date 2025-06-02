@@ -13,10 +13,10 @@
                 <div class="game-item">
                     <a class="game-name-link" >@game.Name</a>
                     <div class="game-actions" style="background-image: url('game.BackgroundUrl');">
-                        <a asp-action="Edit" asp-route-id="@game.Id" class="edit-game-button">
+                        <a asp-action="Edit" asp-route-id="@game.Name" class="edit-game-button">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <form asp-action="Delete" asp-route-id="@game.Id" method="post" class="delete-form">
+                        <form asp-action="Delete" asp-route-id="@game.Name" method="post" class="delete-form">
                             <button type="submit" class="delete-game-button"
                                     onclick="return confirm('Are you sure you want to delete @game.Name?')">
                                 <i class="fas fa-trash"></i>

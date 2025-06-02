@@ -37,36 +37,33 @@ public class Initializer()
         [
             new Game()
             {
-                Id = 64,
                 Name = "Minecraft",
                 Description = "Also try terraria!",
                 PriceUSD = 20,
                 ReleaseYear = 2011,
-                PosterUrl = "https://cdn2.steamgriddb.com/thumb/a73027901f88055aaa0fd1a9e25d36c7.jpg",
+                PosterUrl = "https://cdn2.steamgriddb.com/thumb/782c68199db381ee34a277258c28c89c.jpg",
                 BackgroundUrl = "https://cdn2.steamgriddb.com/hero_thumb/ae93f6696a2a89b67aa6fb45092eded7.jpg",
-                LogoUrl = "https://cdn2.steamgriddb.com/logo_thumb/3d2c20fb145bba2747e87ecf8321bcfc.webm"
+                LogoUrl = "https://cdn2.steamgriddb.com/logo_thumb/90915208c601cc8c86ad01250ee90c12.png"
             },
             new Game()
             {
-                Id = 666,
                 Name = "DOOM",
                 PriceUSD = 40,
                 Description = "Fight like hell",
                 ReleaseYear = 2016,
-                PosterUrl = "https://cdn2.steamgriddb.com/thumb/e6b2e5d385c1503fbd55b97ba5dc4b77.jpg",
-                BackgroundUrl = "https://cdn2.steamgriddb.com/hero_thumb/5a2cb441c18f6535a9fb765251345d0f.jpg",
-                LogoUrl = "https://cdn2.steamgriddb.com/logo_thumb/ada67ce42f7e51433fdc45e523f90ff7.png"
+                PosterUrl = "https://cdn2.steamgriddb.com/thumb/775974bd62116bc3d3b2c51b04192f0c.png",
+                BackgroundUrl = "https://shared.steamstatic.com/store_item_assets/steam/apps/379720/library_hero_2x.jpg?t=1573231983",
+                LogoUrl = "https://shared.steamstatic.com/store_item_assets/steam/apps/379720/logo_2x.png?t=1573231983"
             },
             new Game()
             {
-                Id = 2,
                 Name = "Undertale",
                 PriceUSD = 20,
                 Description = "UNDERTALE! The RPG game where you don't have to destroy anyone. ",
                 ReleaseYear = 2015,
-                PosterUrl = "https://cdn2.steamgriddb.com/thumb/aba1e5182d973f43f2b3fd755f8e2314.jpg",
-                BackgroundUrl = "https://cdn2.steamgriddb.com/hero_thumb/b65f2ecd2900ba6ae49a14d9c4b16fb4.jpg",
-                LogoUrl = "https://cdn2.steamgriddb.com/logo_thumb/3a2c1c2b2f19c0d47bf74b4c40cc1753.png"
+                PosterUrl = "https://cdn2.steamgriddb.com/thumb/14ec86d482ff9638392a061bfa431a1a.jpg",
+                BackgroundUrl = "https://shared.steamstatic.com/store_item_assets/steam/apps/391540/library_hero.jpg?t=1579095961",
+                LogoUrl = "https://shared.steamstatic.com/store_item_assets/steam/apps/391540/logo.png?t=1579095961"
             }
         ];
         await gamesRepository.UpsertGamesAsync(games);

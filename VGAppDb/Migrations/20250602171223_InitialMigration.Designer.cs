@@ -12,8 +12,8 @@ using VGAppDb;
 namespace VGAppDb.Migrations
 {
     [DbContext(typeof(VGAppDbContext))]
-    [Migration("20250601121600_Initial")]
-    partial class Initial
+    [Migration("20250602171223_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,11 +159,8 @@ namespace VGAppDb.Migrations
 
             modelBuilder.Entity("VGAppDb.Models.Game", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("BackgroundUrl")
                         .IsRequired()
@@ -173,10 +170,6 @@ namespace VGAppDb.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("LogoUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -190,7 +183,7 @@ namespace VGAppDb.Migrations
                     b.Property<int>("ReleaseYear")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
                     b.ToTable("Games");
                 });
@@ -203,8 +196,8 @@ namespace VGAppDb.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
+                    b.Property<string>("GameName")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<float?>("Rating")
                         .HasColumnType("float");
@@ -214,7 +207,7 @@ namespace VGAppDb.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameId");
+                    b.HasIndex("GameName");
 
                     b.ToTable("Reviews");
                 });
@@ -338,9 +331,7 @@ namespace VGAppDb.Migrations
                 {
                     b.HasOne("VGAppDb.Models.Game", "Game")
                         .WithMany("Reviews")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GameName");
 
                     b.Navigation("Game");
                 });

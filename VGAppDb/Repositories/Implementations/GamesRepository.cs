@@ -6,14 +6,10 @@ using VGAppDb.Models;
 
 namespace VGAppDb.Repositories;
 
-public class GamesRepository : IGamesRepository
+public class GamesRepository(VGAppDbContext context) : IGamesRepository
 {
-    private readonly VGAppDbContext _context;
+    private readonly VGAppDbContext _context = context;
 
-    public GamesRepository(VGAppDbContext context)
-    {
-        _context = context;
-    }
     public async Task<List<Game>> GetGames(int? amount = null)
     {
         var query = _context.Games.AsQueryable();
@@ -23,27 +19,25 @@ public class GamesRepository : IGamesRepository
 
         return await query.ToListAsync() ?? [];
     }
-    public async Task<Game?> GetGameByIdAsync(int id)
-    {
-        return await _context.Games
-            .Include(g => g.Reviews)
-            .FirstOrDefaultAsync(g => g.Id == id);
-    }
-    public async Task<Game?> GetGameByPropertiesAsync(Game game)
+    public async Task<Game?> GetGameByNameAsync(string name)
     {
         return await _context.Games
                 .Include(g => g.Reviews)
-                .FirstOrDefaultAsync(g => game.Equals(g));
+                .FirstOrDefaultAsync(g => name == g.Name);
     }
-    public async Task<bool> ExistsByIdAsync(int id) =>
-        await GetGameByIdAsync(id) is not null;
-    public async Task<bool> ExistsByPropertiesAsync(Game game) =>
+
+    public async Task<bool> ExistsAsync(Game game) =>
         await _context.Games.AnyAsync(g => g.Equals(game));
+    public async Task<bool> ExistsAsync(string name) =>
+        await _context.Games.AnyAsync(g => g.Name == name);
 
     public async Task AddGameAsync(Game game)
     {
-        if (await ExistsByPropertiesAsync(game))
-            throw new InvalidOperationException("Game with these properties already exists");
+        ArgumentNullException.ThrowIfNull(game);
+
+        if (await ExistsAsync(game))
+            throw new InvalidOperationException("Game with this name already exists");
+
         await _context.Games.AddAsync(game);
         await _context.SaveChangesAsync();
     }
@@ -55,12 +49,11 @@ public class GamesRepository : IGamesRepository
 
     public async Task UpsertGameAsync(Game game)
     {
-        var existing = await GetGameByPropertiesAsync(game);
+        var existing = await GetGameByNameAsync(game.Name);
 
         if (existing is not null)
         {
-            game.Id = existing.Id;
-            await EditGameAsync(game.Id, game);
+            await EditGameAsync(game);
         }
         else
             await AddGameAsync(game);
@@ -72,24 +65,26 @@ public class GamesRepository : IGamesRepository
             await UpsertGameAsync(game);
     }
 
-    public async Task EditGameAsync(int id, Game gameNew)
+    public async Task EditGameAsync(Game gameNew)
     {
-        if (!await ExistsByIdAsync(id))
-            throw new ArgumentException($"Game with ID {id} not found");
+        if (!await ExistsAsync(gameNew))
+            throw new ArgumentException($"Game {gameNew.Name} not found");
 
-        var game = await GetGameByIdAsync(id);
+        var game = await GetGameByNameAsync(gameNew.Name);
 
         _context.Entry(game!).CurrentValues.SetValues(gameNew);
         await _context.SaveChangesAsync();
     }
-    public async Task DeleteGameAsync(int id)
+    public async Task DeleteGameAsync(string name)
     {
-        var game = await _context.Games.FindAsync(id);
+        var game = await GetGameByNameAsync(name);
         if (game is not null)
         {
             _context.Games.Remove(game);
             await _context.SaveChangesAsync();
         }
+        Console.WriteLine("Tried deleting a game that doesn't exist");
     }
+    public async Task DeleteGameAsync(Game game) => await DeleteGameAsync(game.Name);
 
 }

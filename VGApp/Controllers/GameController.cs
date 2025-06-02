@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
 using VGAppDb;
@@ -7,59 +8,55 @@ using VGAppDb.Repositories;
 
 namespace VGApp.Controllers;
 
-public class GameController : Controller
+public class GameController(
+    IReviewsRepository reviewsRepository,
+    IGamesRepository gamesRepository,
+    UserManager<User> userManager) : Controller
 {
-    private readonly IReviewsRepository _reviewsRepository;
-    private readonly IGamesRepository _gamesRepository; // Assuming you have this
-
-    public GameController(
-        IReviewsRepository reviewsRepository,
-        IGamesRepository gamesRepository)
-    {
-        _reviewsRepository = reviewsRepository;
-        _gamesRepository = gamesRepository;
-    }
+    private readonly IReviewsRepository _reviewsRepository = reviewsRepository;
+    private readonly IGamesRepository _gamesRepository = gamesRepository;
+    private readonly UserManager<User> _userManager = userManager;
 
     [HttpPost]
-    public async Task<IActionResult> AddReview(int gameId, float rating, string? text)
+    public async Task<IActionResult> AddReview(string gameName, float rating, string? text)
     {
         try
         {
             if (rating < 0.5f || rating > 5f)
-            {
                 ModelState.AddModelError("rating", "Rating must be between 0.5 and 5 stars");
-            }
-            var game = await _gamesRepository.GetGameByIdAsync(gameId);
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction(gameId.ToString());
-            }
-            if (game is null)
+
+            var game = await _gamesRepository.GetGameByNameAsync(gameName);
+            if (!await _gamesRepository.ExistsAsync(game!))
                 return NotFound();
+            if (!ModelState.IsValid)
+                return RedirectToAction(gameName);
 
             var review = new Review
             {
                 Rating = rating,
                 Text = text,
-                Game = game
+                Game = game!
             };
 
             await _reviewsRepository.AddReviewAsync(review);
 
-            return RedirectToAction(gameId.ToString());
+            return RedirectToAction(gameName.ToString());
         }
         catch (Exception)
         {
             TempData["ErrorMessage"] = "An error occurred while adding your review";
-            return RedirectToAction(gameId.ToString());
+            return RedirectToAction(gameName.ToString());
         }
     }
-    [HttpGet("game/{id}")]
-    public async Task<IActionResult> Id(int id)
+
+    [HttpGet]
+    [Route("Game/Info/{gameName}")]
+    public async Task<IActionResult> Info(string gameName)
     {
-        var game = await _gamesRepository.GetGameByIdAsync(id);
-        if (game is null)
+        if(!await _gamesRepository.ExistsAsync(gameName)) 
             return NotFound();
+
+        var game = await _gamesRepository.GetGameByNameAsync(gameName);
         return View(game);
     }
 }

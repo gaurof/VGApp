@@ -4,8 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.IdentityModel.Tokens;
 using VGAppDb;
 using VGAppDb.Models;
 using VGAppDb.Repositories;
@@ -34,43 +37,48 @@ namespace VGApp.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ReleaseYear,PosterUrl,BackgroundUrl")] Game game)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ReleaseYear,PosterUrl,BackgroundUrl,LogoUrl")] Game game)
         {
             if (ModelState.IsValid)
             {
+                game.Name = game.Name.Trim();
+                game.Description = (game.Description ?? "").Trim();
+                if (await gamesRepository.ExistsAsync(game))
+                {
+                    ModelState.AddModelError(string.Empty, "A game with this name already exists.");
+                    return View(game);
+                }
                 await gamesRepository.AddGameAsync(game);
                 return RedirectToAction(nameof(Index));
             }
             return View(game);
         }
 
-        // GET: Admin/Edit/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Admin/Edit/Edit/gameName
+        public async Task<IActionResult> Edit(string? name)
         {
-            if (id is null || !id.HasValue)
+            if (name.IsNullOrEmpty() ||
+                !await gamesRepository.ExistsAsync(name!))
                 return NotFound();
 
-            if (await gamesRepository.ExistsByIdAsync(id.Value))
-                return NotFound();
-
-            var game = await gamesRepository.GetGameByIdAsync(id.Value);
+            var game = await gamesRepository.GetGameByNameAsync(name!);
             return View(game);
         }
 
-        // POST: Admin/Edit/Edit/5
+        // POST: Admin/Edit/Edit/gameName
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,Price,ReleaseYear,PosterUrl,BackgroundUrl")] Game game)
+        public async Task<IActionResult> Edit([Bind("Name,Description,Price,ReleaseYear,PosterUrl,BackgroundUrl,LogoUrl")] Game game)
         {
-            if (!await gamesRepository.ExistsByPropertiesAsync(game) || id != game.Id)
+            if (!await gamesRepository.ExistsAsync(game))
                 return NotFound();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await gamesRepository.EditGameAsync(id, game);
+                    await gamesRepository.EditGameAsync(game);
                 }
-                catch (DbUpdateConcurrencyException ex) 
+                catch (Exception ex) 
                 { 
                     Console.WriteLine(ex); 
                 }
@@ -79,22 +87,22 @@ namespace VGApp.Controllers
             return View(game);
         }
 
-        // GET: Admin/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Admin/Delete/gameName
+        public async Task<IActionResult> Delete(string? gameName)
         {
-            if (id is null || !id.HasValue)
+            if (gameName.IsNullOrEmpty() ||
+                !await gamesRepository.ExistsAsync(gameName!))
                 return NotFound();
-            if (!await gamesRepository.ExistsByIdAsync(id.Value))
-                return NotFound();
-            var game = await gamesRepository.GetGameByIdAsync(id.Value);
+            var game = await gamesRepository.GetGameByNameAsync(gameName!);
 
             return View(game);
         }
 
-        // POST: Admin/Delete/5
+        // POST: Admin/Delete/gameName
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             await gamesRepository.DeleteGameAsync(id);
             return RedirectToAction(nameof(Index));

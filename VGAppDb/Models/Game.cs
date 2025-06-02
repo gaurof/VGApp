@@ -3,16 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace VGAppDb.Models;
 
 public class Game
 {
-    
-    public int Id { get; set; }
-
+    [Key]
     [Required]
     public required string Name { get; set; }
 
@@ -24,17 +24,19 @@ public class Game
     public int ReleaseYear { get; set; }
 
     [Required]
-    public required string PosterUrl { get; set; }     //600×900
+    public required string PosterUrl { get; set; }
+        //600×900
 
     [Required]
-    public required string BackgroundUrl { get; set; } //1920×620
+    public required string BackgroundUrl { get; set; } 
+        //1920×620
 
     [Required]
-    public required string LogoUrl { get; set; } 
+    public required string LogoUrl { get; set; }
 
 
 
-    public List<Review>? Reviews { get; set; }
+    public List<Review> Reviews { get; set; } = [];
 
 
     public override bool Equals(object? obj)
@@ -50,5 +52,5 @@ public class Game
         return false;
     }
 
-    public override int GetHashCode() => Id;
+    public override int GetHashCode() => HashCode.Combine(Name);
 }
