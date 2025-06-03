@@ -13,10 +13,9 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
         builder.Services.AddControllersWithViews();
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
-        var serverVersion = new MySqlServerVersion(new Version(8, 0, 40));
+        var serverVersion = await ServerVersion.AutoDetectAsync(connectionString);
 
         builder.Services.AddDbContext<VGAppDbContext>(options => 
             options
@@ -28,6 +27,10 @@ public class Program
             {
                 options.User.RequireUniqueEmail = false;
                 options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
             })
             .AddEntityFrameworkStores<VGAppDbContext>()
             .AddDefaultTokenProviders();
