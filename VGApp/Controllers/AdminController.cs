@@ -16,16 +16,12 @@ using VGAppDb.Repositories;
 namespace VGApp.Controllers
 {
     [Authorize(Roles = Constants.AdminRoleName)]
-    public class AdminController : Controller
+    public class AdminController(IGamesRepository gamesRepository) : Controller
     {
-        private readonly IGamesRepository gamesRepository;
-        public AdminController(IGamesRepository gamesRepository)
-        {
-            this.gamesRepository = gamesRepository;
-        }
+        private readonly IGamesRepository gamesRepository = gamesRepository;
 
         // GET: Admin/Edit/Index
-        
+
         public async Task<IActionResult> Index()
         {
             return View(await gamesRepository.GetGames());

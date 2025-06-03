@@ -19,7 +19,6 @@
                 </div>
             }
 
-            <!-- Rating display -->
             <div class="game-rating">
                 @if (Model.Reviews is not null && 
                      Model.Reviews.Any(r => r.Rating.HasValue))
@@ -39,14 +38,12 @@
         </div>
     </div>
 
-    <!-- Reviews Section -->
     <div class="reviews-container">
         <h2>Reviews</h2>
 
-        <!-- Review Form -->
         <div class="review-form">
             <h3>Leave a review</h3>
-            <form asp-action="AddReview" method="post" id="reviewForm">
+            <form asp-controller="Game" asp-action="AddReview" method="post" id="reviewForm">
                 <input type="hidden" name="gameName" value="@Model.Name" />
                 <input type="hidden" name="rating" id="selectedRating" value="" required />
 
@@ -68,7 +65,6 @@
             </form>
         </div>
 
-        <!-- Reviews List -->
         <div class="reviews-list">
             @if (Model.Reviews is not null)
             {
@@ -91,7 +87,6 @@
 
 @section Scripts {
     <script>
-        // Interactive star rating
         const stars = document.querySelectorAll('.star-rating i');
         const ratingInput = document.getElementById('selectedRating');
         const ratingText = document.querySelector('.rating-text');
@@ -140,7 +135,6 @@
             }
         }
 
-        // Form validation
         document.getElementById('reviewForm').addEventListener('submit', function(e) {
             if (!ratingInput.value) {
                 e.preventDefault();
@@ -149,7 +143,6 @@
             }
         });
 
-        // Display existing reviews' stars
         document.querySelectorAll('.stars[data-rating]').forEach(container => {
             const rating = parseFloat(container.dataset.rating);
             container.innerHTML = getStars(rating);

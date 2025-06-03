@@ -13,4 +13,5 @@ public class Review
 
 
     public required Game Game { get; set; }
+    public required User User { get; set; }
 }

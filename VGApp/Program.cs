@@ -40,8 +40,8 @@ public class Program
         builder.Services.ConfigureApplicationCookie(options =>
         {
             options.ExpireTimeSpan = TimeSpan.FromDays(2);
-            options.LoginPath = "/User/Account/Login";
-            options.LogoutPath = "/User/Account/Logout";
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
             options.Cookie = new CookieBuilder() { IsEssential = true };
         });
         await using var app = builder.Build();

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
+using System.Security.Claims;
 using VGAppDb;
 using VGAppDb.Models;
 using VGAppDb.Repositories;
@@ -17,7 +19,7 @@ public class GameController(
     private readonly IGamesRepository _gamesRepository = gamesRepository;
     private readonly UserManager<User> _userManager = userManager;
 
-    [HttpPost]
+    [Authorize]
     public async Task<IActionResult> AddReview(string gameName, float rating, string? text)
     {
         try
@@ -33,6 +35,7 @@ public class GameController(
 
             var review = new Review
             {
+                User = (await _userManager.GetUserAsync(User))!,
                 Rating = rating,
                 Text = text,
                 Game = game!
@@ -40,12 +43,12 @@ public class GameController(
 
             await _reviewsRepository.AddReviewAsync(review);
 
-            return RedirectToAction(gameName.ToString());
+            return Redirect($"{nameof(Info)}/{gameName}");
         }
         catch (Exception)
         {
             TempData["ErrorMessage"] = "An error occurred while adding your review";
-            return RedirectToAction(gameName.ToString());
+            return RedirectToAction(gameName);
         }
     }
 

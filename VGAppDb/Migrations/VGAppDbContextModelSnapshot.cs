@@ -202,9 +202,14 @@ namespace VGAppDb.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GameName");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
                 });
@@ -330,10 +335,21 @@ namespace VGAppDb.Migrations
                         .WithMany("Reviews")
                         .HasForeignKey("GameName");
 
+                    b.HasOne("VGAppDb.Models.User", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Game");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("VGAppDb.Models.Game", b =>
+                {
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("VGAppDb.Models.User", b =>
                 {
                     b.Navigation("Reviews");
                 });
