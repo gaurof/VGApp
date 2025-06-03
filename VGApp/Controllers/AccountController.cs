@@ -14,17 +14,18 @@ namespace VGApp.Controllers
         private readonly SignInManager<User> _signInManager = signInManager;
         private readonly UserManager<User> _userManager = userManager;
 
-        public IActionResult Login(string? returnUrl = null)
+        [AllowAnonymous]
+        public IActionResult Login(string returnUrl = "/Home/Index")
         {
-            TempData["ReturnUrl"] = returnUrl ?? "";
+            TempData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            returnUrl = TempData["ReturnUrl"]!.ToString();
+            var returnUrl = TempData["ReturnUrl"]!.ToString();
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
@@ -51,17 +52,15 @@ namespace VGApp.Controllers
             return Redirect(returnUrl ?? "/Home/Index");
         }
 
-        [HttpPost]
         [AllowAnonymous]
-        public IActionResult Register(string returnUrl)
+        public IActionResult Register(string? returnUrl)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl ?? string.Empty;
             return View();
         }
 
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;

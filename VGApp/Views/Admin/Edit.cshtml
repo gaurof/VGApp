@@ -1,57 +1,119 @@
 ﻿@model VGAppDb.Models.Game
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Game";
 }
 
-<h2>Edit Game</h2>
+<div class="game-detail-page">
+    <div class="game-background" style="background-image: url('@(string.IsNullOrEmpty(Model.BackgroundUrl) ? "https://via.placeholder.com/1920x1080/333/666?text=Background+Preview" : Model.BackgroundUrl)')"></div>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PriceUSD" class="control-label"></label>
-                <input asp-for="PriceUSD" class="form-control" />
-                <span asp-validation-for="PriceUSD" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReleaseYear" class="control-label"></label>
-                <input asp-for="ReleaseYear" class="form-control" />
-                <span asp-validation-for="ReleaseYear" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PosterUrl" class="control-label"></label>
-                <input asp-for="PosterUrl" class="form-control" />
-                <span asp-validation-for="PosterUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BackgroundUrl" class="control-label"></label>
-                <input asp-for="BackgroundUrl" class="form-control" />
-                <span asp-validation-for="BackgroundUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="container game-content">
+        <div class="game-poster-container">
+            <img src="@(string.IsNullOrEmpty(Model.PosterUrl) ? "https://via.placeholder.com/400x600/444/999?text=Poster+Preview" : Model.PosterUrl)" alt="@Model.Name" class="game-poster">
+        </div>
+
+        <div class="game-info">
+            <img src="@(string.IsNullOrEmpty(Model.LogoUrl) ? "https://via.placeholder.com/600x200/444/999?text=Logo+Preview" : Model.LogoUrl)" class="game-logo">
+
+            <form asp-action="Edit" class="game-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <!-- Original name field (hidden) to identify the record being edited -->
+                <input type="hidden" asp-for="Name" />
+
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" id="gameNameInput" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ReleaseYear" class="control-label"></label>
+                    <input asp-for="ReleaseYear" class="form-control" />
+                    <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PriceUSD" class="control-label"></label>
+                    <input step="any" type="number" asp-for="PriceUSD" class="form-control" />
+                    <span asp-validation-for="PriceUSD" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PosterUrl" class="control-label">Poster URL</label>
+                    <input asp-for="PosterUrl" class="form-control" id="posterUrlInput" />
+                    <span asp-validation-for="PosterUrl" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="BackgroundUrl" class="control-label">Background URL</label>
+                    <input asp-for="BackgroundUrl" class="form-control" id="backgroundUrlInput" />
+                    <span asp-validation-for="BackgroundUrl" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="LogoUrl" class="control-label">Logo URL</label>
+                    <input asp-for="LogoUrl" class="form-control" id="logoUrlInput" />
+                    <span asp-validation-for="LogoUrl" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Save Changes" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Updates preview images when URLs are pasted
+        document.getElementById('posterUrlInput').addEventListener('input', function(e) {
+            const url = e.target.value.trim();
+            if (url) {
+                document.querySelector('.game-poster').src = url;
+            } else {
+                document.querySelector('.game-poster').src = 'https://via.placeholder.com/400x600/444/999?text=Poster+Preview';
+            }
+        });
+
+        document.getElementById('backgroundUrlInput').addEventListener('input', function(e) {
+            const url = e.target.value.trim();
+            if (url) {
+                document.querySelector('.game-background').style.backgroundImage = `url('${url}')`;
+            } else {
+                document.querySelector('.game-background').style.backgroundImage = 'url(\'https://via.placeholder.com/1920x1080/333/666?text=Background+Preview\')';
+            }
+        });
+
+        document.getElementById('logoUrlInput').addEventListener('input', function(e) {
+            const url = e.target.value.trim();
+            if (url) {
+                document.querySelector('.game-logo').src = url;
+            } else {
+                document.querySelector('.game-logo').src = 'https://via.placeholder.com/600x200/444/999?text=Logo+Preview';
+            }
+        });
+
+        // Update logo alt text when game name changes
+        document.getElementById('gameNameInput').addEventListener('input', function(e) {
+            const name = e.target.value.trim();
+            if (name) {
+                document.querySelector('.game-poster').alt = name;
+            } else {
+                document.querySelector('.game-poster').alt = 'Game Poster Preview';
+            }
+        });
+    </script>
 }

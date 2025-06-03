@@ -50,14 +50,15 @@ namespace VGApp.Controllers
             return View(game);
         }
 
-        // GET: Admin/Edit/Edit/gameName
-        public async Task<IActionResult> Edit(string? name)
+        // GET: Admin/Edit/gameName
+        [Route("Admin/Edit/{gameName}")]
+        public async Task<IActionResult> Edit(string? gameName)
         {
-            if (name.IsNullOrEmpty() ||
-                !await gamesRepository.ExistsAsync(name!))
+            if (gameName.IsNullOrEmpty() ||
+                !await gamesRepository.ExistsAsync(gameName!))
                 return NotFound();
 
-            var game = await gamesRepository.GetGameByNameAsync(name!);
+            var game = await gamesRepository.GetGameByNameAsync(gameName!);
             return View(game);
         }
 

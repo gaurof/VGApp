@@ -68,9 +68,10 @@
         <div class="reviews-list">
             @if (Model.Reviews is not null)
             {
-                @foreach (var review in Model.Reviews.OrderByDescending(r => r.Rating))
+                @foreach (var review in Model.Reviews)
                 {
                     <div class="review-item">
+                        @review.User.UserName;
                         <div class="review-rating">
                             <div class="stars" data-rating="@review.Rating"></div>
                         </div>

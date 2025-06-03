@@ -2,6 +2,7 @@
 @model RegisterViewModel
 @{
     ViewData["Title"] = "Join GameVault";
+    var returnUrl = @Url.PageLink()!.Substring(Constants.DefaultURL.Length);
 }
 
 <div class="container">
@@ -51,7 +52,7 @@
                         </div>
 
                         <div class="text-center mt-3">
-                            <p>Already a member? <a asp-action="Login">Sign in</a></p>
+                            <p>Already a member? <a asp-action="Login" asp-route-returnUrl=@returnUrl>Sign in</a></p>
                         </div>
                     </form>
                 </div>

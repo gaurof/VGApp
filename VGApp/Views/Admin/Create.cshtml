@@ -38,7 +38,7 @@
 
                 <div class="form-group">
                     <label asp-for="PriceUSD" class="control-label"></label>
-                    <input asp-for="PriceUSD" class="form-control" />
+                    <input step="any" type="number" asp-for="PriceUSD" class="form-control" />
                     <span asp-validation-for="PriceUSD" class="text-danger"></span>
                 </div>
 
@@ -75,7 +75,7 @@
     }
 
     <script>
-        // Update preview images when URLs are pasted
+        // Updates preview images when URLs are pasted
         document.getElementById('posterUrlInput').addEventListener('input', function(e) {
             const url = e.target.value.trim();
             if (url) {
