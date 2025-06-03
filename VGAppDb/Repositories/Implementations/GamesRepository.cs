@@ -23,6 +23,7 @@ public class GamesRepository(VGAppDbContext context) : IGamesRepository
     {
         return await _context.Games
                 .Include(g => g.Reviews)
+                .ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(g => name == g.Name);
     }
 

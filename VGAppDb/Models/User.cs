@@ -9,10 +9,6 @@ namespace VGAppDb.Models;
 // Add profile data for application users by adding properties to the User class
 public class User : IdentityUser
 {
-    public User() : base()
-    {
-        Reviews = [];
-    }
-    public List<Review> Reviews { get; set; }
+    public List<Review> Reviews { get; set; } = [];
 }
 

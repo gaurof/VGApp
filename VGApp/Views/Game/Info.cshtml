@@ -71,7 +71,7 @@
                 @foreach (var review in Model.Reviews)
                 {
                     <div class="review-item">
-                        @review.User.UserName;
+                        <h2>@review.User.UserName</h2>
                         <div class="review-rating">
                             <div class="stars" data-rating="@review.Rating"></div>
                         </div>

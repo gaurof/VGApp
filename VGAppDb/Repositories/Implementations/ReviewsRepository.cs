@@ -20,8 +20,9 @@ namespace VGAppDb.Repositories
         public async Task<List<Game>> GetReviewsByGameName(string name)
         {
             return await _context.Games
-                .Include(g => g.Reviews)
                 .Where(g => g.Name == name)
+                .Include(g => g.Reviews)
+                .ThenInclude(g => g.User)
                 .ToListAsync();
         }
 
@@ -29,7 +30,9 @@ namespace VGAppDb.Repositories
         {
             return await _context.Games
                 .Include(g => g.Reviews)
-                .FirstOrDefaultAsync(g => g.Reviews!.Any(r => r.Id == id));
+                .ThenInclude(g => g.User)
+                .FirstOrDefaultAsync(g => g.Reviews!
+                    .Any(r => r.Id == id));
         }
 
         public async Task AddReviewAsync(Review review)
