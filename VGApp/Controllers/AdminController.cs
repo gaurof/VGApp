@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using Microsoft.IdentityModel.Tokens;
-using VGAppDb;
 using VGAppDb.Models;
 using VGAppDb.Repositories;
 
@@ -54,7 +44,7 @@ namespace VGApp.Controllers
         [Route("Admin/Edit/{gameName}")]
         public async Task<IActionResult> Edit(string? gameName)
         {
-            if (gameName.IsNullOrEmpty() ||
+            if (string.IsNullOrEmpty(gameName) ||
                 !await gamesRepository.ExistsAsync(gameName!))
                 return NotFound();
 
@@ -87,7 +77,7 @@ namespace VGApp.Controllers
         // GET: Admin/Delete/gameName
         public async Task<IActionResult> Delete(string? gameName)
         {
-            if (gameName.IsNullOrEmpty() ||
+            if (string.IsNullOrEmpty(gameName) ||
                 !await gamesRepository.ExistsAsync(gameName!))
                 return NotFound();
             var game = await gamesRepository.GetGameByNameAsync(gameName!);

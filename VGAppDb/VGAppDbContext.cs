@@ -10,7 +10,7 @@ public class VGAppDbContext : IdentityDbContext<User>
     public VGAppDbContext(DbContextOptions<VGAppDbContext> options)
         : base(options)
     {
-        Database.Migrate();
+
     }
     public DbSet<Game> Games { get; set; }
     public DbSet<Review> Reviews { get; set; }

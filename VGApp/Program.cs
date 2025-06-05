@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using VGAppDb.Models;
 using Microsoft.Extensions.DependencyInjection;
 using VGAppDb.Repositories;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace VGApp;
 
@@ -15,7 +16,7 @@ public class Program
 
         builder.Services.AddControllersWithViews();
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
-        var serverVersion = await ServerVersion.AutoDetectAsync(connectionString);
+        var serverVersion = ServerVersion.AutoDetect(connectionString);
 
         builder.Services.AddDbContext<VGAppDbContext>(options => 
             options
@@ -61,16 +62,17 @@ public class Program
             var services = scope.ServiceProvider;
             try
             {
+                var dbContext = services.GetRequiredService<VGAppDbContext>();
                 var userManager = services.GetRequiredService<UserManager<User>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var gamesRepository = services.GetRequiredService<IGamesRepository>();
                 await Initializer.InitializeIdentity(userManager, roleManager);
                 await Initializer.CreatePlaceholderGames(gamesRepository);
+                await dbContext.Database.MigrateAsync();
             }
             catch (Exception ex)
             {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An error occurred while seeding identity data.");
+                Console.WriteLine("An error occurred while seeding identity data.\n" + ex);
             }
         }
         app.UseHttpsRedirection();
@@ -87,6 +89,7 @@ public class Program
             .WithStaticAssets();
 
         app.MapRazorPages();
+
 
         app.Run();
     }

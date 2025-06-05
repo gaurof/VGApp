@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using VGApp.Models;
 using VGAppDb.Models;
 

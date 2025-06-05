@@ -10,8 +10,9 @@ public class Review
     public string? Text { get; set; }
 
     public float? Rating { get; set; } // From 0.5 to 5 stars
-    public DateTime PublicationDate { get; set; } = DateTime.Now;
+    public DateTime PublicationTime { get; set; } = DateTime.Now;
 
     public required Game Game { get; set; }
     public required User User { get; set; }
+    //public List<User> LikedByUsers { get; set; } = [];
 }

@@ -10,5 +10,7 @@ namespace VGAppDb.Models;
 public class User : IdentityUser
 {
     public List<Review> Reviews { get; set; } = [];
+    
+    //public List<Review> LikedReviews { get; set; } = [];
 }
 

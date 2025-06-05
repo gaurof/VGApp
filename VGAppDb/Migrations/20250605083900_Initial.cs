@@ -228,6 +228,7 @@ namespace VGAppDb.Migrations
                     Text = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Rating = table.Column<float>(type: "float", nullable: true),
+                    PublicationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     GameName = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: true)

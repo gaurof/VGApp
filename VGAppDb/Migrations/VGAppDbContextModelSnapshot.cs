@@ -17,7 +17,7 @@ namespace VGAppDb.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "8.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -196,7 +196,7 @@ namespace VGAppDb.Migrations
                     b.Property<string>("GameName")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateTime>("PublicationDate")
+                    b.Property<DateTime>("PublicationTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<float?>("Rating")
