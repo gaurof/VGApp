@@ -196,6 +196,9 @@ namespace VGAppDb.Migrations
                     b.Property<string>("GameName")
                         .HasColumnType("varchar(255)");
 
+                    b.Property<DateTime>("PublicationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<float?>("Rating")
                         .HasColumnType("float");
 
