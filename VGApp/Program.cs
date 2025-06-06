@@ -67,7 +67,6 @@ public class Program
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var gamesRepository = services.GetRequiredService<IGamesRepository>();
                 await Initializer.InitializeIdentity(userManager, roleManager);
-                await Initializer.CreatePlaceholderGames(gamesRepository);
                 await dbContext.Database.MigrateAsync();
             }
             catch (Exception ex)
