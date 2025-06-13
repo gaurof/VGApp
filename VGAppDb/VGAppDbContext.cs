@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
+using System.Reflection.Emit;
 using VGAppDb.Models;
 
 namespace VGAppDb;
@@ -15,6 +17,14 @@ public class VGAppDbContext : IdentityDbContext<User>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        builder.Entity<Review>()
+            .HasMany(r => r.LikedByUsers)
+            .WithMany(u => u.LikedReviews);
+
+        builder.Entity<Review>()
+            .HasOne<User>(r => r.User)
+            .WithMany(u => u.Reviews);
 
         builder.Entity<Game>().HasData(
             new Game()

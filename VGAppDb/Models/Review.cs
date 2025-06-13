@@ -14,5 +14,5 @@ public class Review
 
     public required Game Game { get; set; }
     public required User User { get; set; }
-    //public List<User> LikedByUsers { get; set; } = [];
+    public List<User> LikedByUsers { get; set; } = [];
 }
