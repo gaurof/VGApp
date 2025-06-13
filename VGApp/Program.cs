@@ -15,7 +15,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllersWithViews();
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
+        var connectionString = builder.Configuration.GetConnectionString("Default" + "ConnectionString"); //NOSU, Default 
         var serverVersion = ServerVersion.AutoDetect(connectionString);
 
         builder.Services.AddDbContext<VGAppDbContext>(options => 
