@@ -28,10 +28,23 @@
                 @if (game.Reviews is not null && game.Reviews.Any(r => r.Rating.HasValue))
                 {
                     var averageRating = game.Reviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value);
-                    <div class="average-rating">
-                        Rating: @Math.Round(averageRating, 1)/5
-                        <div class="stars" data-rating="@averageRating"></div>
-                        <span>(@game.Reviews.Count reviews)</span>
+                    <div class="stars" data-rating=@averageRating>
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (@averageRating >= i)
+                            {
+                                <i class="fas fa-star"></i>
+                            }
+                            else if (averageRating> i - 1)
+                            {
+                                <i class="fas fa-star-half-alt"></i>
+                            }
+                            else
+                            {
+                                <i class="far fa-star"></i>
+                            }
+                        }
+
                     </div>
                 }
                 else
