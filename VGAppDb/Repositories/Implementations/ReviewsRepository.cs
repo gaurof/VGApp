@@ -26,13 +26,13 @@ namespace VGAppDb.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Game?> GetReviewByIdAsync(int id)
+        public async Task<Review?> GetReviewByIdAsync(int id)
         {
-            return await _context.Games
-                .Include(g => g.Reviews)
-                .ThenInclude(g => g.User)
-                .FirstOrDefaultAsync(g => g.Reviews!
-                    .Any(r => r.Id == id));
+            return await _context.Reviews
+                .Include(r => r.User)
+                .Include(r => r.Game)
+                .Include(r => r.UsersThatLiked)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task AddReviewAsync(Review review)
@@ -53,7 +53,35 @@ namespace VGAppDb.Repositories
             }
         }
 
-        public async Task<bool> ExistsAsync(Review review) => 
+        public async Task<bool> ExistsAsync(Review review) =>
             await GetReviewByIdAsync(review.Id) is not null;
+
+        public async Task ToggleLikeAsync(string userId, int reviewId)
+        {
+            var review = await _context.Reviews
+                .Include(r => r.UsersThatLiked)
+                .FirstOrDefaultAsync(r => r.Id == reviewId) ??
+                throw new ArgumentException("Review not found");
+
+            var user = await _context.Users.FindAsync(userId) ??
+                throw new ArgumentException("User not found");
+
+            var existingLike = review.UsersThatLiked
+                .FirstOrDefault(u => u.Id == userId);
+
+            if (existingLike is null)
+                review.UsersThatLiked.Add(user);
+            else review.UsersThatLiked.Remove(user);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> GetLikeCountAsync(int reviewId)
+        {
+            return await _context.Reviews
+                .Where(r => r.Id == reviewId)
+                .SelectMany(r => r.UsersThatLiked)
+                .CountAsync();
+        }
     }
 }

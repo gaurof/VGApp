@@ -19,11 +19,25 @@ public class VGAppDbContext : IdentityDbContext<User>
         base.OnModelCreating(builder);
 
         builder.Entity<Review>()
-            .HasMany(r => r.LikedByUsers)
-            .WithMany(u => u.LikedReviews);
+        .HasMany(r => r.UsersThatLiked)
+        .WithMany(u => u.LikedReviews)
+        .UsingEntity<Dictionary<string, object>>(
+            "ReviewLikes",
+            j => j.HasOne<User>().WithMany(),
+            j => j.HasOne<Review>().WithMany()
+        );
+
+        builder.Entity<Game>()
+        .HasMany(r => r.UsersThatPlayed)
+        .WithMany(u => u.GamesPlayed)
+        .UsingEntity<Dictionary<string, object>>(
+            "GameUsers",
+            j => j.HasOne<User>().WithMany(),
+            j => j.HasOne<Game>().WithMany()
+        );
 
         builder.Entity<Review>()
-            .HasOne<User>(r => r.User)
+            .HasOne(r => r.User)
             .WithMany(u => u.Reviews);
 
         builder.Entity<Game>().HasData(
@@ -56,6 +70,16 @@ public class VGAppDbContext : IdentityDbContext<User>
                 PosterUrl = "https://cdn2.steamgriddb.com/thumb/14ec86d482ff9638392a061bfa431a1a.jpg",
                 BackgroundUrl = "https://shared.steamstatic.com/store_item_assets/steam/apps/391540/library_hero.jpg?t=1579095961",
                 LogoUrl = "https://shared.steamstatic.com/store_item_assets/steam/apps/391540/logo.png?t=1579095961"
+            }, 
+            new Game()
+            {
+                Name = "Counter-Strike",
+                Description = "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. ",
+                PriceUSD = 5,
+                ReleaseYear = 2000,
+                PosterUrl = "https://cdn2.steamgriddb.com/thumb/6bf8cff2494ff41052ac8474df638cdb.jpg",
+                BackgroundUrl = "https://cdn2.steamgriddb.com/hero_thumb/1be3614ec5d67a9fe3fd389516f369ea.jpg",
+                LogoUrl = "https://cdn2.steamgriddb.com/logo_thumb/13d429db192fbc7b5cabf9b936cf78e1.png"
             });
     }
     public DbSet<Game> Games { get; set; }

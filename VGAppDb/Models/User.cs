@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace VGAppDb.Models;
 
-// Add profile data for application users by adding properties to the User class
 public class User : IdentityUser
 {
     public List<Review> Reviews { get; set; } = [];
     public List<Review> LikedReviews { get; set; } = [];
+    public List<Game> GamesPlayed { get; set; } = [];
+    public DateTime TimeCreated { get; set; } = DateTime.Now;
 }
 

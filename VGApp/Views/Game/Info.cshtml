@@ -20,8 +20,8 @@
             }
 
             <div class="game-rating">
-                @if (Model.Reviews is not null && 
-                     Model.Reviews.Any(r => r.Rating.HasValue))
+                @if (Model.Reviews is not null &&
+                Model.Reviews.Any(r => r.Rating.HasValue))
                 {
                     var averageRating = Model.Reviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value);
                     <div class="average-rating">
@@ -61,7 +61,7 @@
                     <textarea name="text" id="text" class="form-control" rows="4"></textarea>
                 </div>
 
-                <button style="background-image: url('@Model.BackgroundUrl');" type="submit" class="btn btn-primary">Submit Review</button>
+                <button type="submit" style="background-image: url(@Model.BackgroundUrl);" class="btn-punched-hole">Submit Review</button>
             </form>
         </div>
 
@@ -71,14 +71,30 @@
                 @foreach (var review in Model.Reviews)
                 {
                     <div class="review-item">
-                        <h2>@review.User.UserName</h2>
-                        <div class="review-rating">
-                            <div class="stars" data-rating="@review.Rating"></div>
+                        <div class="review-header">
+                            <h2>@review.User.UserName</h2>
+                            <div class="review-rating">
+                                <div class="stars" data-rating="@review.Rating"></div>
+                            </div>
                         </div>
+
                         @if (!string.IsNullOrEmpty(review.Text))
                         {
                             <div class="review-text">@review.Text</div>
                         }
+
+                        <div class="review-footer">
+                            <div class="like-container">
+                                <div class="like-count">@review.LikesCount</div>
+                                <form asp-controller="Game" asp-action="ToggleLike">
+                                    <input type="hidden" name="gameName" value="@Model.Name" />
+                                    <input type="hidden" name="reviewId" value="@review.Id" />
+                                    <button class="like-button" type="submit">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 }
             }

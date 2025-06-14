@@ -56,10 +56,26 @@ public class GameController(
     [Route("Game/Info/{gameName}")]
     public async Task<IActionResult> Info(string gameName)
     {
-        if(!await _gamesRepository.ExistsAsync(gameName)) 
+        if (!await _gamesRepository.ExistsAsync(gameName))
             return NotFound();
 
         var game = await _gamesRepository.GetGameByNameAsync(gameName);
         return View(game);
+    }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ToggleLike(string gameName, int reviewId)
+    {
+        var currentUser = await _userManager.GetUserAsync(User);
+        if (currentUser is null) return Unauthorized();
+
+        var review = await _reviewsRepository.GetReviewByIdAsync(reviewId);
+        if (review is null) return NotFound();
+
+        await _reviewsRepository.ToggleLikeAsync(review.User.Id, reviewId);
+
+        return RedirectToAction("Info", new { gameName });
     }
 }

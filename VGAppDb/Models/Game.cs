@@ -15,28 +15,22 @@ public class Game
     [Key]
     [Required]
     public required string Name { get; set; }
-
     public string? Description { get; set; }
-
     [Required]
     public required decimal PriceUSD { get; set; }
-
     public int ReleaseYear { get; set; }
-
     [Required]
     public required string PosterUrl { get; set; }
-        //600×900
-
     [Required]
     public required string BackgroundUrl { get; set; } 
         //1920×620
-
     [Required]
     public required string LogoUrl { get; set; }
 
 
 
     public List<Review> Reviews { get; set; } = [];
+    public List<User> UsersThatPlayed { get; set; } = [];
 
 
     public override bool Equals(object? obj)

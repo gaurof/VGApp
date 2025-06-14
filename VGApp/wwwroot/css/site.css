@@ -11,6 +11,7 @@
     --card-bg: #1e2125;
     --content-bg: #14181c;
     --card-border: rgba(255, 255, 255, 0.08);
+    --red-like: rgba(231, 76, 60);
 }
 
 body {
@@ -75,6 +76,7 @@ body {
     background: var(--accent-color);
     border: 0px;
 }
+
     .btn-primary:hover {
         background: var(--accent-light);
         border: 0px;
@@ -209,7 +211,7 @@ body {
     margin-bottom: 0.5rem;
 }
 
-.game-logo { 
+.game-logo {
     max-width: 100%;
     max-height: 20%;
 }
@@ -228,6 +230,102 @@ body {
     color: var(--text-light);
 }
 /* Reviews Section */
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.review-rating {
+    display: flex;
+    align-items: center;
+}
+
+.review-footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+/* Punched hole button effect */
+.btn-punched-hole {
+    color: white;
+    padding: 10px 25px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-radius: 16px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    backdrop-filter: blur(2px);
+    z-index: 1;
+}
+
+    .btn-punched-hole:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        border-color: white;
+    }
+
+        .btn-punched-hole:hover::before {
+            transform: scale(1.05);
+        }
+
+    .btn-punched-hole:active {
+        transform: scale(0.98);
+    }
+
+
+
+.review-rating {
+    display: flex;
+    align-items: center;
+}
+
+.review-footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.like-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.like-button {
+    color: var(--accent-light);
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+    .like-button:hover {
+        transform: scale(1.1);
+    }
+
+    .like-button:active {
+        transform: scale(1.5);
+    }
+
+    .like-button.liked {
+        color: var(--red-like);
+    }
+
+.like-count {
+    font-weight: 600;
+    color: #7f8c8d;
+}
+
 .reviews-container {
     max-width: 800px;
     margin: 40px auto;
@@ -520,6 +618,7 @@ input:invalid, select:invalid, textarea:invalid {
         flex-direction: column;
     }
 }
+
 .games-list {
     display: flex;
     flex-direction: column;

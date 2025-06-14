@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VGAppDb;
 
@@ -11,9 +12,11 @@ using VGAppDb;
 namespace VGAppDb.Migrations
 {
     [DbContext(typeof(VGAppDbContext))]
-    partial class VGAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250613052650_AddedLikes")]
+    partial class AddedLikes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace VGAppDb.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("GameUsers", b =>
-                {
-                    b.Property<string>("GamesPlayedName")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("UsersThatPlayedId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("GamesPlayedName", "UsersThatPlayedId");
-
-                    b.HasIndex("UsersThatPlayedId");
-
-                    b.ToTable("GameUsers");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -169,19 +157,19 @@ namespace VGAppDb.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ReviewLikes", b =>
+            modelBuilder.Entity("ReviewUser", b =>
                 {
+                    b.Property<string>("LikedByUsersId")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<int>("LikedReviewsId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsersThatLikedId")
-                        .HasColumnType("varchar(255)");
+                    b.HasKey("LikedByUsersId", "LikedReviewsId");
 
-                    b.HasKey("LikedReviewsId", "UsersThatLikedId");
+                    b.HasIndex("LikedReviewsId");
 
-                    b.HasIndex("UsersThatLikedId");
-
-                    b.ToTable("ReviewLikes");
+                    b.ToTable("ReviewUser");
                 });
 
             modelBuilder.Entity("VGAppDb.Models.Game", b =>
@@ -244,16 +232,6 @@ namespace VGAppDb.Migrations
                             PosterUrl = "https://cdn2.steamgriddb.com/thumb/14ec86d482ff9638392a061bfa431a1a.jpg",
                             PriceUSD = 20m,
                             ReleaseYear = 2015
-                        },
-                        new
-                        {
-                            Name = "Counter-Strike",
-                            BackgroundUrl = "https://cdn2.steamgriddb.com/hero_thumb/1be3614ec5d67a9fe3fd389516f369ea.jpg",
-                            Description = "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. ",
-                            LogoUrl = "https://cdn2.steamgriddb.com/logo_thumb/13d429db192fbc7b5cabf9b936cf78e1.png",
-                            PosterUrl = "https://cdn2.steamgriddb.com/thumb/6bf8cff2494ff41052ac8474df638cdb.jpg",
-                            PriceUSD = 5m,
-                            ReleaseYear = 2000
                         });
                 });
 
@@ -335,9 +313,6 @@ namespace VGAppDb.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime>("TimeCreated")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -355,21 +330,6 @@ namespace VGAppDb.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("GameUsers", b =>
-                {
-                    b.HasOne("VGAppDb.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GamesPlayedName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VGAppDb.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersThatPlayedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -423,17 +383,17 @@ namespace VGAppDb.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ReviewLikes", b =>
+            modelBuilder.Entity("ReviewUser", b =>
                 {
-                    b.HasOne("VGAppDb.Models.Review", null)
+                    b.HasOne("VGAppDb.Models.User", null)
                         .WithMany()
-                        .HasForeignKey("LikedReviewsId")
+                        .HasForeignKey("LikedByUsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VGAppDb.Models.User", null)
+                    b.HasOne("VGAppDb.Models.Review", null)
                         .WithMany()
-                        .HasForeignKey("UsersThatLikedId")
+                        .HasForeignKey("LikedReviewsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
