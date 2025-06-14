@@ -1,33 +1,37 @@
-﻿@model VGAppDb.Models.Game
+﻿@using VGApp.ViewModels
+@model GameWithUserViewModel;
+@{
+    var game = Model.Game;
+    var currentUser = Model.User ?? new VGAppDb.Models.User();
+}
 
 <div class="game-detail-page">
-    <div class="game-background" style="background-image: url('@Model.BackgroundUrl')"></div>
+    <div class="game-background" style="background-image: url('@game.BackgroundUrl')"></div>
 
     <div class="container game-content">
         <div class="game-poster-container">
-            <img src="@Model.PosterUrl" alt="@Model.Name" class="game-poster">
+            <img src="@game.PosterUrl" alt="@game.Name" class="game-poster">
         </div>
 
         <div class="game-info">
-            <img src="@Model.LogoUrl" class="game-logo">
-            <span class="game-release-year">@Model.ReleaseYear</span>
+            <img src="@game.LogoUrl" class="game-logo">
+            <span class="game-release-year">@game.ReleaseYear</span>
 
-            @if (!string.IsNullOrEmpty(Model.Description))
+            @if (!string.IsNullOrEmpty(game.Description))
             {
                 <div class="game-description">
-                    @Model.Description
+                    @game.Description
                 </div>
             }
 
             <div class="game-rating">
-                @if (Model.Reviews is not null &&
-                Model.Reviews.Any(r => r.Rating.HasValue))
+                @if (game.Reviews is not null && game.Reviews.Any(r => r.Rating.HasValue))
                 {
-                    var averageRating = Model.Reviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value);
+                    var averageRating = game.Reviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value);
                     <div class="average-rating">
                         Rating: @Math.Round(averageRating, 1)/5
                         <div class="stars" data-rating="@averageRating"></div>
-                        <span>(@Model.Reviews.Count reviews)</span>
+                        <span>(@game.Reviews.Count reviews)</span>
                     </div>
                 }
                 else
@@ -35,47 +39,77 @@
                     <div>No ratings yet</div>
                 }
             </div>
+            <div class="played-button-container">
+                <form asp-controller="Game" asp-action="TogglePlayed" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="gameName" value="@game.Name" />
+                    <button type="submit" class="played-button @(currentUser.HasPlayed(game) ? "played" : "")"
+                            title="@(currentUser.HasPlayed(game) ? "Played" : "Mark as played")">
+                        <i class="fas @(currentUser.HasPlayed(game) ? "fa-check" : "fa-gamepad ")"></i>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
     <div class="reviews-container">
         <h2>Reviews</h2>
+        @if (!currentUser.HasReviewed(game))
+        {
+            <div class="review-form">
+                <h3>Leave a review</h3>
+                <form asp-controller="Game" asp-action="AddReview" method="post" id="reviewForm">
+                    <input type="hidden" name="gameName" value="@game.Name" />
+                    <input type="hidden" name="rating" id="selectedRating" value="" required />
 
-        <div class="review-form">
-            <h3>Leave a review</h3>
-            <form asp-controller="Game" asp-action="AddReview" method="post" id="reviewForm">
-                <input type="hidden" name="gameName" value="@Model.Name" />
-                <input type="hidden" name="rating" id="selectedRating" value="" required />
-
-                <div class="form-group">
-                    <div class="star-rating">
-                        @for (float i = 1; i <= 5; i++)
-                        {
-                            <i class="far fa-star" data-rating="@i"></i>
-                        }
-                        <span class="rating-text">Select a rating</span>
+                    <div class="form-group">
+                        <div class="star-rating">
+                            @for (float i = 1; i <= 5; i++)
+                            {
+                                <i class="far fa-star" data-rating="@i"></i>
+                            }
+                            <span class="rating-text">Select a rating</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <textarea name="text" id="text" class="form-control" rows="4"></textarea>
-                </div>
+                    <div class="form-group">
+                        <textarea name="text" id="text" class="form-control" rows="4"></textarea>
+                    </div>
 
-                <button type="submit" style="background-image: url(@Model.BackgroundUrl);" class="btn-punched-hole">Submit Review</button>
-            </form>
-        </div>
+                    <button type="submit" style="background-image: url(@game.BackgroundUrl);" class="btn-punched-hole">Submit Review</button>
+                </form>
+            </div>
+        }
 
         <div class="reviews-list">
-            @if (Model.Reviews is not null)
+            @if (game.Reviews is not null)
             {
-                @foreach (var review in Model.Reviews)
+                @foreach (var review in game.Reviews)
                 {
                     <div class="review-item">
                         <div class="review-header">
                             <h2>@review.User.UserName</h2>
                             <div class="review-rating">
-                                <div class="stars" data-rating="@review.Rating"></div>
+                                <div class="stars" data-rating="@review.Rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (review.Rating >= i)
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        else if (review.Rating > i - 1)
+                                        {
+                                            <i class="fas fa-star-half-alt"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="far fa-star"></i>
+                                        }
+                                    }
+                                
+                                </div>
                             </div>
+                            <h5>@review.PublicationTime.ToShortTimeString()</h5>
                         </div>
 
                         @if (!string.IsNullOrEmpty(review.Text))
@@ -85,14 +119,25 @@
 
                         <div class="review-footer">
                             <div class="like-container">
-                                <div class="like-count">@review.LikesCount</div>
+                                <div class="like-count">@review.UsersThatLiked.Count</div>
                                 <form asp-controller="Game" asp-action="ToggleLike">
-                                    <input type="hidden" name="gameName" value="@Model.Name" />
+                                    <input type="hidden" name="gameName" value="@game.Name" />
                                     <input type="hidden" name="reviewId" value="@review.Id" />
-                                    <button class="like-button" type="submit">
-                                        <i class="far fa-heart"></i>
+                                    <button class="like-button @(review.UsersThatLiked.Any(u => u.Id == currentUser.Id) ? "liked" : "")" type="submit">
+                                        <i class="@(review.UsersThatLiked.Any(u => u.Id == currentUser.Id) ? "fas" : "far") fa-heart"></i>
                                     </button>
                                 </form>
+                                @if (review.User.Id == currentUser.Id)
+                                {
+                                    <form asp-controller="Game" asp-action="DeleteReview" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="reviewId" value="@review.Id" />
+                                        <input type="hidden" name="gameName" value="@game.Name" />
+                                        <button type="submit" class="delete-review-btn" title="Delete review">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                }
                             </div>
                         </div>
                     </div>
@@ -104,6 +149,7 @@
 
 @section Scripts {
     <script>
+        // Stars initialization
         const stars = document.querySelectorAll('.star-rating i');
         const ratingInput = document.getElementById('selectedRating');
         const ratingText = document.querySelector('.rating-text');
@@ -159,30 +205,5 @@
                 ratingText.style.color = 'red';
             }
         });
-
-        document.querySelectorAll('.stars[data-rating]').forEach(container => {
-            const rating = parseFloat(container.dataset.rating);
-            container.innerHTML = getStars(rating);
-        });
-
-        function getStars(rating) {
-            if (isNaN(rating)) return '';
-
-            let stars = '';
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 >= 0.5;
-
-            for (let i = 1; i <= 5; i++) {
-                if (i <= fullStars) {
-                    stars += '<i class="fas fa-star"></i>';
-                } else if (i === fullStars + 1 && hasHalfStar) {
-                    stars += '<i class="fas fa-star-half-alt"></i>';
-                } else {
-                    stars += '<i class="far fa-star"></i>';
-                }
-            }
-
-            return stars;
-        }
     </script>
 }

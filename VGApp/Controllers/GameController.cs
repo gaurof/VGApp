@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
-using System.Security.Claims;
-using VGAppDb;
+using VGApp.ViewModels;
 using VGAppDb.Models;
 using VGAppDb.Repositories;
 
@@ -52,21 +49,53 @@ public class GameController(
         }
     }
 
-    [HttpGet]
     [Route("Game/Info/{gameName}")]
     public async Task<IActionResult> Info(string gameName)
     {
         if (!await _gamesRepository.ExistsAsync(gameName))
             return NotFound();
+        var gameWithUserViewModel = new GameWithUserViewModel
+        {
+            Game = (await _gamesRepository.GetGameByNameAsync(gameName))!,
+            User = (await _userManager.GetUserAsync(User))
+        };
 
-        var game = await _gamesRepository.GetGameByNameAsync(gameName);
-        return View(game);
+
+        return View(gameWithUserViewModel);
     }
 
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
+    public async Task<IActionResult> TogglePlayed(string gameName)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null) return Unauthorized();
+
+        var game = await _gamesRepository.GetGameByNameAsync(gameName);
+        if (game is null) return NotFound();
+
+        await _gamesRepository.TogglePlayed(game, user);
+
+        return RedirectToAction("Info", new { gameName });
+    }
     public async Task<IActionResult> ToggleLike(string gameName, int reviewId)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null) return Unauthorized();
+
+        var review = await _reviewsRepository.GetReviewByIdAsync(reviewId);
+        if (review is null) return NotFound();
+
+        await _reviewsRepository.ToggleLikeAsync(user, review);
+
+        return RedirectToAction("Info", new { gameName });
+    }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteReview(string gameName, int reviewId)
     {
         var currentUser = await _userManager.GetUserAsync(User);
         if (currentUser is null) return Unauthorized();
@@ -74,7 +103,7 @@ public class GameController(
         var review = await _reviewsRepository.GetReviewByIdAsync(reviewId);
         if (review is null) return NotFound();
 
-        await _reviewsRepository.ToggleLikeAsync(review.User.Id, reviewId);
+        await _reviewsRepository.DeleteReviewAsync(review.Id);
 
         return RedirectToAction("Info", new { gameName });
     }

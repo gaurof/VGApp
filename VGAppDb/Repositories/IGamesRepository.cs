@@ -22,4 +22,5 @@ public interface IGamesRepository
     
     Task DeleteGameAsync(string name);
     Task DeleteGameAsync(Game game);
+    Task TogglePlayed(Game game, User user);
 }

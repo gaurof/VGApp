@@ -17,6 +17,6 @@ public interface IReviewsRepository
 
     Task<bool> ExistsAsync(Review review);
 
-    Task ToggleLikeAsync(string userId, int reviewId);
-    Task<int> GetLikeCountAsync(int reviewId);
+    Task ToggleLikeAsync(User user, Review review);
+    bool HasUserLikedReview(User user, Review review);
 }

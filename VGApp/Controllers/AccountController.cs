@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using VGApp.Models;
+using VGApp.ViewModels;
 using VGAppDb.Models;
 
 namespace VGApp.Controllers

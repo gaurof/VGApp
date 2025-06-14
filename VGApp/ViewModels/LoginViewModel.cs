@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+namespace VGApp.ViewModels;
 public class LoginViewModel
 {
     [Required]

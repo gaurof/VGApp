@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using VGAppDb.Models;
 
-namespace VGAppDb.Repositories;
+namespace VGAppDb.Repositories.Implementations;
 
 public class GamesRepository(VGAppDbContext context) : IGamesRepository
 {
@@ -22,9 +22,12 @@ public class GamesRepository(VGAppDbContext context) : IGamesRepository
     public async Task<Game?> GetGameByNameAsync(string name)
     {
         return await _context.Games
-                .Include(g => g.Reviews)
-                .ThenInclude(r => r.User)
-                .FirstOrDefaultAsync(g => name == g.Name);
+            .Include(g => g.UsersThatPlayed)
+            .Include(g => g.Reviews)
+            .ThenInclude(r => r.User)
+            .Include(g => g.Reviews)
+            .ThenInclude(r => r.UsersThatLiked)
+            .FirstOrDefaultAsync(g => name == g.Name);
     }
 
     public async Task<bool> ExistsAsync(Game game) =>
@@ -86,6 +89,21 @@ public class GamesRepository(VGAppDbContext context) : IGamesRepository
         }
         Console.WriteLine("Tried deleting a game that doesn't exist");
     }
-    public async Task DeleteGameAsync(Game game) => await DeleteGameAsync(game.Name);
+    public async Task DeleteGameAsync(Game game) => 
+        await DeleteGameAsync(game.Name);
 
+    public async Task TogglePlayed(Game game, User user)
+    {
+        ArgumentNullException.ThrowIfNull(game);
+        ArgumentNullException.ThrowIfNull(user);
+
+        var existingPlay = game.UsersThatPlayed
+            .FirstOrDefault(u => u.Id == user.Id);
+
+        if (!user.HasPlayed(game))
+            game.UsersThatPlayed.Add(user);
+        else game.UsersThatPlayed.Remove(user);
+
+        await _context.SaveChangesAsync();
+    }
 }

@@ -1,4 +1,9 @@
-﻿@model IEnumerable<VGAppDb.Models.Game>
+﻿@using VGApp.ViewModels
+@model UserWithGamesViewModel
+@{
+    var currentUser = Model.User ?? new VGAppDb.Models.User();
+    var games = Model.Games;
+}
 
 <div class="container game-collection">
     <div class="collection-header">
@@ -7,7 +12,7 @@
     </div>
 
     <div class="game-grid">
-        @foreach (var game in Model)
+        @foreach (var game in games)
         {
             <a class="game-card" asp-controller="Game" asp-action="Info" asp-route-gameName="@game.Name">
                 <img src="@game.PosterUrl" alt="@game.Name" class="game-poster">
@@ -16,9 +21,17 @@
                     <div class="game-stats">
                         <span>@game.ReleaseYear</span>
                         <span>$@game.PriceUSD.ToString("0.00")</span>
+                        <div class="mini-played-button-container">
+                            <form asp-controller="Game" asp-action="TogglePlayed" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="gameName" value="@game.Name" />
+                            </form>
+                        </div>
                     </div>
                 </div>
             </a>
+
+
         }
     </div>
 </div>

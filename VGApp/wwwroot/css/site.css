@@ -8,7 +8,7 @@
     --text-light: #f8f9fa;
     --text-dark: #212529;
     --text-muted: #a0a8c0;
-    --card-bg: #1e2125;
+    --card-bg: rgb(30, 33, 37, 0.8);
     --content-bg: #14181c;
     --card-border: rgba(255, 255, 255, 0.08);
     --red-like: rgba(231, 76, 60);
@@ -85,7 +85,7 @@ body {
 /* ===== Home/Index View ===== */
 .main-container {
     background-color: var(--card-bg);
-    border-radius: 8px;
+    border-radius: 20px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
     padding: 2rem;
     margin-top: 2rem;
@@ -229,6 +229,62 @@ body {
     max-width: 800px;
     color: var(--text-light);
 }
+
+/* Played Button Styles */
+.played-button-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.played-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--accent-light);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+    .played-button:hover {
+        transform: scale(1.1);
+        background: rgba(231, 76, 60, 0.1);
+    }
+
+    .played-button.played {
+        background: var(--success-color);
+        color: white;
+    }
+
+    .played-button i {
+        /* Ensures icon is properly centered */
+        display: block;
+        width: 100%;
+        text-align: center;
+        line-height: 1;
+    }
+
+.game-actions {
+    margin: 20px 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+.played-button-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
 /* Reviews Section */
 .review-header {
     display: flex;
@@ -247,34 +303,49 @@ body {
     display: flex;
     justify-content: flex-end;
 }
-/* Punched hole button effect */
+
 .btn-punched-hole {
+    position: relative;
     color: white;
-    padding: 10px 25px;
+    width: 100%; /* Full width */
+    padding: 12px 0; /* Adjusted padding */
     font-weight: bold;
     font-size: 1.1rem;
     border-radius: 16px;
     cursor: pointer;
-    position: relative;
-    transition: all 0.3s ease;
     border: 2px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
     overflow: hidden;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(3px);
     z-index: 1;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    transition: all 0.3s ease;
+    display: block; /* Changed to block for full width */
+    text-align: center; /* Center text */
 }
 
-    .btn-punched-hole:hover {
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-        border-color: white;
+    .btn-punched-hole::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: inherit;
+        background-attachment: fixed;
+        background-position: center;
+        background-size: cover;
+        z-index: -1;
+        opacity: 0.8;
+        filter: blur(2px);
+        transition: transform 0.5s ease;
     }
 
-        .btn-punched-hole:hover::before {
-            transform: scale(1.05);
-        }
-
-    .btn-punched-hole:active {
-        transform: scale(0.98);
-    }
+/* Container adjustment for form */
+.review-form form {
+    width: 100%; /* Ensure form takes full width */
+    max-width: 100%; /* Prevent overflow */
+}
 
 
 
@@ -326,6 +397,19 @@ body {
     color: #7f8c8d;
 }
 
+.delete-review-btn {
+    background: none;
+    border: none;
+    color: var(--red-like);
+    cursor: pointer;
+    padding: 6px;
+    transition: all 0.2s ease;
+}
+
+    .delete-review-btn:hover {
+        transform: scale(1.1);
+    }
+
 .reviews-container {
     max-width: 800px;
     margin: 40px auto;
@@ -371,6 +455,10 @@ body {
     margin-bottom: 15px;
     border-bottom: 1px solid #eee;
     color: var(--text-light);
+}
+
+.review-item h5{
+    color: var(--accent-light);
 }
 
 .review-rating {

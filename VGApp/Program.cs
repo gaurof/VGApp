@@ -5,6 +5,7 @@ using VGAppDb.Models;
 using Microsoft.Extensions.DependencyInjection;
 using VGAppDb.Repositories;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using VGAppDb.Repositories.Implementations;
 
 namespace VGApp;
 
