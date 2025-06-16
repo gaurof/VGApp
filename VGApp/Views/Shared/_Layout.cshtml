@@ -91,6 +91,13 @@
                 &copy; 2025 - GameVault
             </div>
         </div>
+        @if (returnUrl.ToLower().Contains("deltarune"))
+        {
+            <a onclick="splat()" onscroll="splat()">
+                <img src="~/lancer.png" />
+            </a>
+        }
+
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -99,3 +106,9 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<script>
+    function splat(){
+      var splat = new Audio('/splat.mp3');
+      splat.play();
+      }
+</script>
