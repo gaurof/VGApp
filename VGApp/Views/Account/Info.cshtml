@@ -12,7 +12,7 @@
         </div>
         <div class="user-info">
             <h1>@Model.UserName</h1>
-            <p>Account created @Model.TimeCreated.ToLocalTime().Humanize()</p>
+            <p>Account created @Model.TimeCreated.ToLocalTime().Humanize(culture:System.Globalization.CultureInfo.InvariantCulture)</p>
         </div>
     </div>
 
@@ -82,7 +82,7 @@
                                             }
                                         </div>
                                     </div>
-                                    <div class="user-review-date">@review.PublicationTime.ToLocalTime().Humanize()</div>
+                                    <div class="user-review-date">@review.PublicationTime.ToLocalTime().Humanize(culture:System.Globalization.CultureInfo.InvariantCulture)</div>
                                 </div>
                             </div>
 

@@ -75,13 +75,12 @@
     }
 
     <script>
-        // Updates preview images when URLs are pasted
         document.getElementById('posterUrlInput').addEventListener('input', function(e) {
             const url = e.target.value.trim();
             if (url) {
                 document.querySelector('.game-poster').src = url;
             } else {
-                document.querySelector('.game-poster').src = 'https://via.placeholder.com/400x600/444/999?text=Poster+Preview';
+                document.querySelector('.game-poster').src = 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fplaceholderimagegenerator.com%2Fwp-content%2Fuploads%2F2024%2F12%2FLight-placeholder-image-portrait_jpg_.jpg&f=1&nofb=1&ipt=26bc42750008b3e665afeee9e4df6e593721c5605d223c57c8a17e5445ef71ad';
             }
         });
 
@@ -90,7 +89,7 @@
             if (url) {
                 document.querySelector('.game-background').style.backgroundImage = `url('${url}')`;
             } else {
-                document.querySelector('.game-background').style.backgroundImage = 'url(\'https://via.placeholder.com/1920x1080/333/666?text=Background+Preview\')';
+                document.querySelector('.game-background').style.backgroundImage = 'url(\'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgeekflare.com%2Fwp-content%2Fuploads%2F2023%2F03%2Fimg-placeholder.png&f=1&nofb=1&ipt=a0f7f7ca6ba9c5034b2c0961c5dc2c32a691e634517a655b6b1f4038581cc6e1\')';
             }
         });
 
@@ -103,7 +102,6 @@
             }
         });
 
-        // Update logo alt text when game name changes
         document.getElementById('gameNameInput').addEventListener('input', function(e) {
             const name = e.target.value.trim();
             if (name) {

@@ -125,7 +125,7 @@
                                 
                                 </div>
                             </div>
-                            <h5>@review.PublicationTime.ToLocalTime().Humanize()</h5>
+                            <h5>@review.PublicationTime.ToLocalTime().Humanize(culture:System.Globalization.CultureInfo.InvariantCulture)</h5>
                         </div>
 
                         @if (!string.IsNullOrEmpty(review.Text))
