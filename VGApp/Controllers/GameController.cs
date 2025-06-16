@@ -79,10 +79,12 @@ public class GameController(
 
         return RedirectToAction("Info", new { gameName });
     }
+    [Authorize]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleLike(string gameName, int reviewId)
     {
         var user = await _userManager.GetUserAsync(User);
-        if (user is null) return Unauthorized();
+        if (user is null) return RedirectToAction();
 
         var review = await _reviewsRepository.GetReviewByIdAsync(reviewId);
         if (review is null) return NotFound();

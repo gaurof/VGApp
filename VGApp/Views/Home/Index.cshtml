@@ -21,11 +21,9 @@
                     <div class="game-stats">
                         <span>@game.ReleaseYear</span>
                         <span>$@game.PriceUSD.ToString("0.00")</span>
-                        <div class="mini-played-button-container">
-                            <form asp-controller="Game" asp-action="TogglePlayed" method="post">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="gameName" value="@game.Name" />
-                            </form>
+                        <div class="played-indicator @(currentUser.HasPlayed(game) ? "played" : "")"
+                             title="@(currentUser.HasPlayed(game) ? "Played" : "Not played")">
+                            <i class="fas @(currentUser.HasPlayed(game) ? "fa-check" : "fa-gamepad")"></i>
                         </div>
                     </div>
                 </div>

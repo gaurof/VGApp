@@ -247,6 +247,46 @@ namespace VGAppDb.Migrations
                         },
                         new
                         {
+                            Name = "DELTARUNE",
+                            BackgroundUrl = "https://deltarune.com/assets/images/bg.gif",
+                            Description = "DELTARUNE! The RPG game where your choices don't matter. ",
+                            LogoUrl = "https://deltarune.com/assets/images/logo.png",
+                            PosterUrl = "https://deltarune.com/assets/images/key-art.gif",
+                            PriceUSD = 25m,
+                            ReleaseYear = 2025
+                        },
+                        new
+                        {
+                            Name = "Grand Theft Auto V",
+                            BackgroundUrl = "https://images.steamusercontent.com/ugc/11669731338331342254/D8FF2435AC1815F69543C8DEE34D15D52399A3DA/?imw=2048&imh=1152&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true",
+                            Description = "Grand Theft Auto V for PC offers players the option to explore the award-winning world of Los Santos and Blaine County in resolutions of up to 4k and beyond, as well as the chance to experience the game running at 60 frames per second.",
+                            LogoUrl = "https://cdn2.steamgriddb.com/logo_thumb/e5b294b70c9647dcf804d7baa1903918.png",
+                            PosterUrl = "https://cdn2.steamgriddb.com/thumb/86f045465e82c214dc5e68ba530546ba.jpg",
+                            PriceUSD = 40m,
+                            ReleaseYear = 2013
+                        },
+                        new
+                        {
+                            Name = "Red Dead Redemption 2",
+                            BackgroundUrl = "https://cdn2.steamgriddb.com/hero_thumb/81e5f81db77c596492e6f1a5a792ed53.jpg",
+                            Description = "Winner of over 175 Game of the Year Awards and recipient of over 250 perfect scores, RDR2 is the epic tale of outlaw Arthur Morgan and the infamous Van der Linde gang, on the run across America at the dawn of the modern age. ",
+                            LogoUrl = "https://shared.steamstatic.com/store_item_assets/steam/apps/1174180/logo_2x.png?t=1671484934",
+                            PosterUrl = "https://cdn2.steamgriddb.com/thumb/e746c3c588c51ad5efcc7125e3df662c.jpg",
+                            PriceUSD = 40m,
+                            ReleaseYear = 2018
+                        },
+                        new
+                        {
+                            Name = "Terraria",
+                            BackgroundUrl = "https://shared.steamstatic.com/store_item_assets/steam/apps/105600/library_hero.jpg?t=1666290502",
+                            Description = "Also try Minecraft!",
+                            LogoUrl = "https://shared.steamstatic.com/store_item_assets/steam/apps/105600/logo_2x.png?t=1666290502",
+                            PosterUrl = "https://images-ext-1.discordapp.net/external/ftJWBEe_E9ZCBdz6EEqxSXK4b5r_9zFTEimtI9KII7Q/https/cdn2.steamgriddb.com/thumb/301c8008a981254f98950cebef344b58.jpg?format=webp",
+                            PriceUSD = 5m,
+                            ReleaseYear = 2011
+                        },
+                        new
+                        {
                             Name = "Counter-Strike",
                             BackgroundUrl = "https://cdn2.steamgriddb.com/hero_thumb/1be3614ec5d67a9fe3fd389516f369ea.jpg",
                             Description = "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. ",
@@ -254,6 +294,16 @@ namespace VGAppDb.Migrations
                             PosterUrl = "https://cdn2.steamgriddb.com/thumb/6bf8cff2494ff41052ac8474df638cdb.jpg",
                             PriceUSD = 5m,
                             ReleaseYear = 2000
+                        },
+                        new
+                        {
+                            Name = "Team Fortress 2",
+                            BackgroundUrl = "https://shared.steamstatic.com/store_item_assets/steam/apps/440/library_hero.jpg?t=1745368576",
+                            Description = "After 9 years in development.",
+                            LogoUrl = "https://shared.steamstatic.com/store_item_assets/steam/apps/440/logo.png?t=1745368576",
+                            PosterUrl = "https://cdn2.steamgriddb.com/thumb/2eaa17f7324d93370a43a7b8d55d038e.jpg",
+                            PriceUSD = 0m,
+                            ReleaseYear = 2009
                         });
                 });
 

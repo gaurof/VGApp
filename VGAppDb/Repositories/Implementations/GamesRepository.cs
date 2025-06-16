@@ -17,7 +17,7 @@ public class GamesRepository(VGAppDbContext context) : IGamesRepository
         if (amount.HasValue)
             query = query.Take(amount.Value);
 
-        return await query.ToListAsync() ?? [];
+        return await query.Include(g => g.UsersThatPlayed).ToListAsync() ?? [];
     }
     public async Task<Game?> GetGameByNameAsync(string name)
     {

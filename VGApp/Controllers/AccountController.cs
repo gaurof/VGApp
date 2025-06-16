@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using VGApp.ViewModels;
 using VGAppDb.Models;
 
@@ -14,6 +15,42 @@ namespace VGApp.Controllers
         private readonly UserManager<User> _userManager = userManager;
 
         [AllowAnonymous]
+        public async Task<IActionResult> Info(string? userId = null)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                if (User.Identity?.IsAuthenticated ?? false)
+                    userId = _userManager.GetUserId(User);
+                else
+                    return RedirectToAction("Login", "Account", new { returnUrl = $"/Account/Info" });
+            }
+
+            var user = await _userManager.FindByIdAsync(userId!);
+
+            if (user is null) 
+                return NotFound();
+
+            var userWithData = await _userManager.Users
+                .Include(u => u.Reviews)
+                    .ThenInclude(r => r.Game)
+                .Include(u => u.GamesPlayed)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (userWithData is null)
+                return NotFound();
+
+            userWithData.Reviews = userWithData.Reviews?
+                .OrderByDescending(r => r.PublicationTime)
+                .ToList() ?? [];
+
+            return View(userWithData);
+        }
+
+
+
+
+
+        [AllowAnonymous]
         public IActionResult Login(string returnUrl = "/Home/Index")
         {
             TempData["ReturnUrl"] = returnUrl;
@@ -24,7 +61,7 @@ namespace VGApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            var returnUrl = TempData["ReturnUrl"]!.ToString();
+            var returnUrl = (TempData["ReturnUrl"] ?? "/Home/Index").ToString();
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
@@ -62,7 +99,7 @@ namespace VGApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl ?? "/Home/Index";
             if (ModelState.IsValid)
             {
                 var user = new User { UserName = model.Username };

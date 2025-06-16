@@ -12,8 +12,8 @@ using VGAppDb;
 namespace VGAppDb.Migrations
 {
     [DbContext(typeof(VGAppDbContext))]
-    [Migration("20250614163932_AddedLikesAndToggles")]
-    partial class AddedLikesAndToggles
+    [Migration("20250615095317_AddedDELTARUNE")]
+    partial class AddedDELTARUNE
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -247,6 +247,26 @@ namespace VGAppDb.Migrations
                             PosterUrl = "https://cdn2.steamgriddb.com/thumb/14ec86d482ff9638392a061bfa431a1a.jpg",
                             PriceUSD = 20m,
                             ReleaseYear = 2015
+                        },
+                        new
+                        {
+                            Name = "DELTARUNE",
+                            BackgroundUrl = "https://deltarune.com/assets/images/bg.gif",
+                            Description = "UNDERTALE! The RPG game where you don't have to destroy anyone. ",
+                            LogoUrl = "https://deltarune.com/assets/images/logo.png",
+                            PosterUrl = "https://deltarune.com/assets/images/key-art.gif",
+                            PriceUSD = 25m,
+                            ReleaseYear = 2015
+                        },
+                        new
+                        {
+                            Name = "Counter-Strike",
+                            BackgroundUrl = "https://cdn2.steamgriddb.com/hero_thumb/1be3614ec5d67a9fe3fd389516f369ea.jpg",
+                            Description = "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. ",
+                            LogoUrl = "https://cdn2.steamgriddb.com/logo_thumb/13d429db192fbc7b5cabf9b936cf78e1.png",
+                            PosterUrl = "https://cdn2.steamgriddb.com/thumb/6bf8cff2494ff41052ac8474df638cdb.jpg",
+                            PriceUSD = 5m,
+                            ReleaseYear = 2000
                         });
                 });
 

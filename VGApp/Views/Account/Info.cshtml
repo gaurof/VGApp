@@ -1,0 +1,109 @@
+﻿@using Humanizer
+@model VGAppDb.Models.User
+@{
+    ViewData["Title"] = $"{Model.UserName}'s Profile";
+}
+
+<div class="user-profile-page">
+    <!-- User Profile Header -->
+    <div class="user-header">
+        <div class="user-avatar">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-info">
+            <h1>@Model.UserName</h1>
+            <p>Account created @Model.TimeCreated.ToLocalTime().Humanize()</p>
+        </div>
+    </div>
+
+    <!-- Played Games Section -->
+    <div class="played-games-section">
+        <h2>Played Games</h2>
+        @if (Model.GamesPlayed != null && Model.GamesPlayed.Any())
+        {
+            <div class="game-grid">
+                @foreach (var game in Model.GamesPlayed)
+                {
+                    <a class="game-card" asp-controller="Game" asp-action="Info" asp-route-gameName="@game.Name">
+                        <img src="@game.PosterUrl" alt="@game.Name" class="game-poster">
+                        <div class="game-info-overlay">
+                            <img class="game-logo" src="@game.LogoUrl">
+                            <div class="game-stats">
+                                <span>@game.ReleaseYear</span>
+                                <span>$@game.PriceUSD.ToString("0.00")</span>
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="no-games">This user hasn't played any games yet.</p>
+        }
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="user-reviews-section">
+        <h2>Reviews</h2>
+        @if (Model.Reviews != null && Model.Reviews.Any())
+        {
+            <div class="user-reviews-list">
+                @foreach (var review in Model.Reviews.OrderByDescending(r => r.PublicationTime))
+                {
+                    <div class="user-review-item" style="background-image: url('@review.Game.BackgroundUrl')">
+                        <div class="user-review-content">
+                            <div class="user-review-game-info">
+                                <a asp-controller="Game" asp-action="Info" asp-route-gameName="@review.Game.Name">
+                                    <img src="@review.Game.PosterUrl" alt="@review.Game.Name" class="user-review-game-poster">
+                                </a>
+                                <div>
+                                    <h3>
+                                        <a asp-controller="Game" asp-action="Info" asp-route-gameName="@review.Game.Name">
+                                            @review.Game.Name
+                                        </a>
+                                    </h3>
+                                    <div class="user-review-rating">
+                                        <div class="stars" data-rating="@review.Rating">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (review.Rating >= i)
+                                                {
+                                                    <i class="fas fa-star"></i>
+                                                }
+                                                else if (review.Rating > i - 1)
+                                                {
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="far fa-star"></i>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="user-review-date">@review.PublicationTime.ToLocalTime().Humanize()</div>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(review.Text))
+                            {
+                                <div class="user-review-text">@review.Text</div>
+                            }
+
+                            <div class="user-review-footer">
+                                <div class="like-count">
+                                    <i class="fas fa-heart"></i> @review.LikesCount
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="no-reviews">This user hasn't written any reviews yet.</p>
+        }
+    </div>
+</div>
