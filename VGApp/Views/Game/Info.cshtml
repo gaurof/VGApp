@@ -143,10 +143,11 @@
                                         <i class="@(review.UsersThatLiked.Any(u => u.Id == currentUser.Id) ? "fas" : "far") fa-heart"></i>
                                     </button>
                                 </form>
-                                @if (review.User.Id == currentUser.Id)
+                                @if (review.User.Id == currentUser.Id || 
+                                    User.IsInRole(Constants.AdminRoleName))
                                 {
                                     <form asp-controller="Game" asp-action="DeleteReview" method="post"
-                                          onsubmit="return confirm('Are you sure you want to delete your review?');">
+                                          onsubmit="return confirm('Are you sure you want to delete @review.User.UserName\'s review?');">
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="reviewId" value="@review.Id" />
                                         <input type="hidden" name="gameName" value="@game.Name" />
